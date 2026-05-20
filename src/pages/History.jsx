@@ -5,15 +5,15 @@ import {
 } from 'recharts'
 import { db } from '../db'
 
-const TABS = ['캘린더', '운동그래프', '인바디']
-const DAYS = ['일', '월', '화', '수', '목', '금', '토']
+const TABS = ['운동그래프', '인바디']
+
 
 export default function History() {
-  const [tab, setTab] = useState('캘린더')
+  const [tab, setTab] = useState('운동그래프')
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-xl font-bold pt-4">운동 기록</h1>
+      <h1 className="text-xl font-bold pt-4">통계 · 기록</h1>
 
       <div className="flex bg-slate-800 rounded-xl p-1 gap-1">
         {TABS.map(t => (
@@ -29,106 +29,8 @@ export default function History() {
         ))}
       </div>
 
-      {tab === '캘린더' && <CalendarTab />}
       {tab === '운동그래프' && <WorkoutGraphTab />}
       {tab === '인바디' && <InbodyTab />}
-    </div>
-  )
-}
-
-/* ─── 캘린더 탭 ─── */
-function CalendarTab() {
-  const [logs, setLogs] = useState([])
-  const [selected, setSelected] = useState(null)
-
-  useEffect(() => {
-    db.workoutLogs.orderBy('date').reverse().limit(90).toArray().then(setLogs)
-  }, [])
-
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = today.getMonth()
-  const firstDay = new Date(year, month, 1).getDay()
-  const daysInMonth = new Date(year, month + 1, 0).getDate()
-  const cells = Array.from({ length: firstDay }, () => null)
-    .concat(Array.from({ length: daysInMonth }, (_, i) => i + 1))
-
-  const logByDate = {}
-  logs.forEach(l => { logByDate[l.date] = l })
-
-  function fmtDuration(s) {
-    if (!s) return ''
-    return `${Math.floor(s / 60)}분 ${s % 60}초`
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="bg-slate-800 rounded-2xl p-4">
-        <p className="text-center text-sm font-medium mb-3">{year}년 {month + 1}월</p>
-        <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-500 mb-2">
-          {DAYS.map(d => <span key={d}>{d}</span>)}
-        </div>
-        <div className="grid grid-cols-7 gap-1">
-          {cells.map((day, i) => {
-            if (!day) return <div key={i} />
-            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-            const hasLog = !!logByDate[dateStr]
-            const isToday = day === today.getDate()
-            return (
-              <button
-                key={i}
-                onClick={() => hasLog && setSelected(logByDate[dateStr])}
-                className={`aspect-square rounded-full flex items-center justify-center text-xs font-medium transition-colors
-                  ${hasLog ? 'bg-[#ff4757] text-white' : 'text-slate-400'}
-                  ${isToday ? 'ring-2 ring-[#ff4757] ring-offset-1 ring-offset-[#222]' : ''}`}
-              >
-                {day}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {selected && (
-        <div className="bg-slate-800 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="font-semibold">{selected.date}</p>
-            <div className="flex items-center gap-3">
-              {selected.duration && <span className="text-xs text-slate-500">⏱ {fmtDuration(selected.duration)}</span>}
-              <button onClick={() => setSelected(null)} className="text-xs text-slate-400">닫기</button>
-            </div>
-          </div>
-          {(selected.exercises || []).map((ex, i) => (
-            <div key={i} className="space-y-1">
-              <p className="text-sm font-medium text-[#ff6b6b]">{ex.name}</p>
-              <div className="flex flex-wrap gap-1.5">
-                {(ex.sets || []).map((s, j) => (
-                  <span key={j} className="text-xs bg-slate-700 px-2 py-1 rounded-lg text-slate-300">
-                    {s.weight}kg × {s.reps}회
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="space-y-2">
-        <p className="text-sm text-slate-400 font-medium">최근 운동</p>
-        {logs.slice(0, 10).map(log => (
-          <button
-            key={log.id}
-            onClick={() => setSelected(log)}
-            className="w-full bg-slate-800 rounded-xl px-4 py-3 flex items-center justify-between text-left"
-          >
-            <div>
-              <p className="text-sm font-medium">{log.date}</p>
-              <p className="text-xs text-slate-500">{log.exercises?.length ?? 0}개 종목</p>
-            </div>
-            {log.duration && <span className="text-xs text-slate-500">{fmtDuration(log.duration)}</span>}
-          </button>
-        ))}
-      </div>
     </div>
   )
 }

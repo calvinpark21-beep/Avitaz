@@ -11,7 +11,8 @@ export default function Routines() {
   useEffect(() => { load() }, [])
 
   async function load() {
-    setRoutines(await db.routines.toArray())
+    const data = await db.routines.toArray()
+    setRoutines([...data].sort((a, b) => b.id - a.id))
   }
 
   function startNew() {

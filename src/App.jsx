@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { seedExercises } from './db'
+import { seedExercises, seedRoutines } from './db'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Workout from './pages/Workout'
@@ -11,7 +11,7 @@ import Exercises from './pages/Exercises'
 import Settings from './pages/Settings'
 
 export default function App() {
-  useEffect(() => { seedExercises() }, [])
+  useEffect(() => { seedExercises(); seedRoutines() }, [])
 
   return (
     <BrowserRouter>

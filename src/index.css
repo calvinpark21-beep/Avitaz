@@ -25,6 +25,10 @@ body {
   padding-bottom: max(env(safe-area-inset-bottom), 16px);
 }
 
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
 /* 페이지 전환 애니메이션 */
 @keyframes pagein {
   from { opacity: 0; transform: translateY(8px); }

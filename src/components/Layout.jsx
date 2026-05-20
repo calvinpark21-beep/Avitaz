@@ -13,7 +13,7 @@ export default function Layout() {
 
   return (
     <div className="flex flex-col min-h-svh max-w-lg mx-auto">
-      <main key={location.pathname} className="flex-1 overflow-y-auto pb-24 animate-pagein">
+      <main key={location.pathname} className="flex-1 overflow-y-auto pb-24 animate-pagein safe-top">
         <Outlet />
       </main>
 

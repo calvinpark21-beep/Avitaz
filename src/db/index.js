@@ -161,6 +161,55 @@ const EXERCISES = [
   { name: '하프스쿼트', category: 'PT 운동', note: '1일차' },
 ]
 
+const ROUTINE_SEED_VERSION = 'v1'
+
+const SEED_ROUTINES = [
+  {
+    name: '루틴1',
+    exercises: [
+      { name: '바닥 스트레칭', sets: 1, reps: 10, weight: 0 },
+      { name: '네발자세 다리 뒤로 뻗어 버티기', sets: 3, reps: 10, weight: 0 },
+      { name: '팔꿈치 네발자세 다리 뒤로 뻗어 무릎 접었다 펴기', sets: 3, reps: 10, weight: 0 },
+      { name: '힙 서클', sets: 2, reps: 10, weight: 0 },
+      { name: '짐볼 요추 분절 운동', sets: 3, reps: 10, weight: 0 },
+      { name: '스쿼트', sets: 3, reps: 10, weight: 30 },
+      { name: '원레그 데드리프트', sets: 3, reps: 10, weight: 0 },
+      { name: '힙 에어플레인', sets: 3, reps: 10, weight: 0 },
+      { name: 'T밸런스', sets: 2, reps: 10, weight: 0 },
+      { name: '플랭크', sets: 3, reps: 30, weight: 0 },
+    ],
+  },
+  {
+    name: '루틴2',
+    exercises: [
+      { name: '스쿼트', sets: 4, reps: 10, weight: 25 },
+      { name: '스텝박스 런지 무릎올리기', sets: 2, reps: 10, weight: 6 },
+      { name: '원레그 데드리프트', sets: 3, reps: 10, weight: 0 },
+      { name: '네발자세 다리 뒤로 뻗어 버티기', sets: 3, reps: 30, weight: 0 },
+      { name: '네발자세 다리 옆으로 들기', sets: 3, reps: 20, weight: 0 },
+    ],
+  },
+]
+
+export async function seedRoutines() {
+  const savedVersion = localStorage.getItem('routineSeedVersion')
+  if (savedVersion === ROUTINE_SEED_VERSION) return
+
+  const existing = await db.routines.toArray()
+  if (existing.length > 0) {
+    localStorage.setItem('routineSeedVersion', ROUTINE_SEED_VERSION)
+    return
+  }
+
+  localStorage.setItem('routineSeedVersion', ROUTINE_SEED_VERSION)
+  for (const r of SEED_ROUTINES) {
+    await db.routines.add({
+      ...r,
+      exercises: r.exercises.map(e => ({ ...e, exerciseId: 0 })),
+    })
+  }
+}
+
 export async function seedExercises() {
   const savedVersion = localStorage.getItem('exerciseSeedVersion')
   if (savedVersion === SEED_VERSION) return
