@@ -18,7 +18,7 @@ export default function Layout() {
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 max-w-lg mx-auto">
-        <div className="safe-bottom backdrop-blur-2xl" style={{ background: 'rgba(7,7,16,0.85)', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+        <div className="safe-bottom" style={{ background: '#0a0a14', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
           <div className="flex justify-around items-center h-14">
             {NAV.map(({ to, label, icon: Icon, main }) => (
               <NavLink

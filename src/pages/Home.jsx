@@ -180,7 +180,7 @@ export default function Home() {
         <ModalPortal>
           <div className="fixed inset-0 z-[100] flex items-end" style={{ background: 'rgba(0,0,0,0.75)' }} onClick={() => setShowPicker(false)}>
             <div className="w-full max-w-lg mx-auto rounded-t-3xl animate-slideup flex flex-col"
-              style={{ maxHeight: '80vh', background: 'rgba(10,10,20,0.97)', border: '1px solid rgba(255,255,255,0.08)', borderBottom: 'none' }}
+              style={{ maxHeight: '80vh', background: '#0e0e1c', border: '1px solid rgba(255,255,255,0.07)', borderBottom: 'none' }}
               onClick={e => e.stopPropagation()}>
               <div className="flex justify-center pt-3 pb-1 shrink-0">
                 <div className="w-10 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.2)' }} />
