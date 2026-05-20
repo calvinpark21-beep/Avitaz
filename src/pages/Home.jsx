@@ -171,7 +171,7 @@ export default function Home() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-end" onClick={() => setShowPicker(false)}>
           <div
             className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col"
-            style={{ maxHeight: '70vh' }}
+            style={{ maxHeight: '80vh' }}
             onClick={e => e.stopPropagation()}
           >
             <div className="flex justify-center pt-3 pb-1 shrink-0">
@@ -181,7 +181,7 @@ export default function Home() {
               <p className="font-semibold">루틴 선택</p>
               <button onClick={() => setShowPicker(false)} className="text-slate-500 text-sm">닫기</button>
             </div>
-            <div className="overflow-y-auto px-4 pb-8 space-y-2">
+            <div className="overflow-y-auto flex-1 px-4 pb-8 space-y-2">
               {routines.length === 0 ? (
                 <p className="text-center text-slate-500 py-8 text-sm">저장된 루틴이 없습니다</p>
               ) : (
