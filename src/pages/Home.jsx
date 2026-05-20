@@ -170,35 +170,34 @@ export default function Home() {
       {showPicker && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-end" onClick={() => setShowPicker(false)}>
           <div
-            className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup"
+            className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col"
+            style={{ maxHeight: '70vh' }}
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex justify-center pt-3 pb-1">
+            <div className="flex justify-center pt-3 pb-1 shrink-0">
               <div className="w-10 h-1 rounded-full bg-slate-700" />
             </div>
-            <div className="px-4 pb-8">
-              <div className="flex items-center justify-between py-3">
-                <p className="font-semibold">루틴 선택</p>
-                <button onClick={() => setShowPicker(false)} className="text-slate-500 text-sm">닫기</button>
-              </div>
+            <div className="flex items-center justify-between px-4 py-3 shrink-0">
+              <p className="font-semibold">루틴 선택</p>
+              <button onClick={() => setShowPicker(false)} className="text-slate-500 text-sm">닫기</button>
+            </div>
+            <div className="overflow-y-auto px-4 pb-8 space-y-2">
               {routines.length === 0 ? (
                 <p className="text-center text-slate-500 py-8 text-sm">저장된 루틴이 없습니다</p>
               ) : (
-                <div className="space-y-2">
-                  {routines.map(r => (
-                    <button
-                      key={r.id}
-                      onClick={() => { setShowPicker(false); navigate('/workout', { state: { routineId: r.id } }) }}
-                      className="w-full bg-[#222] rounded-2xl px-4 py-3.5 flex items-center justify-between text-left"
-                    >
-                      <div>
-                        <p className="font-medium text-sm">{r.name}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{r.exercises?.length ?? 0}개 종목</p>
-                      </div>
-                      <span className="text-[#ff4757] text-sm">→</span>
-                    </button>
-                  ))}
-                </div>
+                routines.map(r => (
+                  <button
+                    key={r.id}
+                    onClick={() => { setShowPicker(false); navigate('/workout', { state: { routineId: r.id } }) }}
+                    className="w-full bg-[#222] rounded-2xl px-4 py-3.5 flex items-center justify-between text-left"
+                  >
+                    <div>
+                      <p className="font-medium text-sm">{r.name}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{r.exercises?.length ?? 0}개 종목</p>
+                    </div>
+                    <span className="text-[#ff4757] text-sm">→</span>
+                  </button>
+                ))
               )}
             </div>
           </div>
