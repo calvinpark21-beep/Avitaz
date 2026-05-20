@@ -170,7 +170,7 @@ function RoutineEditor({ initial, onSave, onCancel }) {
                 <div key={field} className="text-center">
                   <p className="text-xs text-slate-500 mb-1">{label}</p>
                   <input
-                    type="number"
+                    type="text"
                     inputMode="decimal"
                     value={ex[field] ?? 0}
                     onFocus={e => e.target.select()}

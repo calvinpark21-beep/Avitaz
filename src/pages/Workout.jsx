@@ -105,15 +105,21 @@ export default function Workout() {
     if (exercises.length === 0) { navigate('/'); return }
     setSaving(true)
     const todayStr = new Date().toISOString().slice(0, 10)
-    await db.workoutLogs.add({
-      date: todayStr,
-      duration: elapsed,
-      exercises: exercises.map(ex => ({
-        exerciseId: ex.exerciseId,
-        name: ex.name,
-        sets: ex.sets.filter(s => s.done),
-      })),
-    })
+    const newExercises = exercises.map(ex => ({
+      exerciseId: ex.exerciseId,
+      name: ex.name,
+      sets: ex.sets.filter(s => s.done),
+    }))
+    const existing = await db.workoutLogs.where('date').equals(todayStr).first()
+    if (existing) {
+      await db.workoutLogs.put({
+        ...existing,
+        duration: (existing.duration || 0) + elapsed,
+        exercises: [...(existing.exercises || []), ...newExercises],
+      })
+    } else {
+      await db.workoutLogs.add({ date: todayStr, duration: elapsed, exercises: newExercises })
+    }
     navigate('/')
   }
 
@@ -159,19 +165,19 @@ export default function Workout() {
                     <div key={setIdx} className={`grid grid-cols-12 gap-1 items-center rounded-xl px-1 py-1 transition-opacity ${s.done ? 'opacity-40' : ''}`}>
                       <span className="col-span-1 text-xs text-slate-500">{setIdx + 1}</span>
                       <input
-                        type="number"
+                        type="text"
                         inputMode="decimal"
                         value={isCardio ? s.duration : s.weight}
                         onFocus={e => e.target.select()}
-                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'duration' : 'weight', Number(e.target.value))}
+                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'duration' : 'weight', Number(e.target.value) || 0)}
                         className="col-span-5 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
                       />
                       <input
-                        type="number"
-                        inputMode="decimal"
+                        type="text"
+                        inputMode={isCardio ? 'decimal' : 'numeric'}
                         value={isCardio ? s.distance : s.reps}
                         onFocus={e => e.target.select()}
-                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'distance' : 'reps', Number(e.target.value))}
+                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'distance' : 'reps', Number(e.target.value) || 0)}
                         className="col-span-4 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
                       />
                       <button
