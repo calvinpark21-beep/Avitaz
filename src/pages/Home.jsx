@@ -147,7 +147,7 @@ export default function Home() {
                   <div className="flex flex-wrap gap-1.5">
                     {(ex.sets || []).map((s, j) => (
                       <span key={j} className="text-xs px-2.5 py-1 rounded-lg text-slate-300" style={{ background: 'rgba(255,255,255,0.07)' }}>
-                        {s.weight}kg × {s.reps}회
+                        {'duration' in s ? `${s.duration}분 · ${s.distance}km` : `${s.weight}kg × ${s.reps}회`}
                       </span>
                     ))}
                   </div>

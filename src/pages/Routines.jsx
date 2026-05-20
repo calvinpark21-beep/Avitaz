@@ -107,7 +107,11 @@ function RoutineEditor({ initial, onSave, onCancel }) {
   const [showPicker, setShowPicker] = useState(false)
 
   function addExercise(ex) {
-    setExercises(prev => [...prev, { exerciseId: ex.id, name: ex.name, sets: 3, reps: 10, weight: 0 }])
+    const isCardio = ex.type === 'cardio'
+    setExercises(prev => [...prev, isCardio
+      ? { exerciseId: ex.id, name: ex.name, type: 'cardio', sets: 1, duration: 30, distance: 0 }
+      : { exerciseId: ex.id, name: ex.name, sets: 3, reps: 10, weight: 0 }
+    ])
     setShowPicker(false)
   }
 
@@ -159,13 +163,16 @@ function RoutineEditor({ initial, onSave, onCancel }) {
               className="w-full bg-transparent text-xs text-slate-500 outline-none border-b border-white/5 focus:border-violet-500/50 pb-0.5 transition-colors"
             />
             <div className="grid grid-cols-3 gap-2 pt-1">
-              {[['sets', '세트'], ['reps', '횟수'], ['weight', '무게(kg)']].map(([field, label]) => (
+              {(ex.type === 'cardio'
+                ? [['sets', '세트'], ['duration', '시간(분)'], ['distance', '거리(km)']]
+                : [['sets', '세트'], ['reps', '횟수'], ['weight', '무게(kg)']]
+              ).map(([field, label]) => (
                 <div key={field} className="text-center">
                   <p className="text-xs text-slate-500 mb-1">{label}</p>
                   <input
                     type="number"
-                    inputMode="numeric"
-                    value={ex[field]}
+                    inputMode="decimal"
+                    value={ex[field] ?? 0}
                     onChange={e => updateExercise(idx, field, e.target.value)}
                     className="w-full glass-input rounded-lg text-center text-sm py-1.5 outline-none focus:ring-1 focus:ring-violet-500"
                   />

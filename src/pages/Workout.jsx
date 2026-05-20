@@ -25,7 +25,10 @@ export default function Workout() {
           (r.exercises || []).map(e => ({
             exerciseId: e.exerciseId,
             name: e.name,
-            sets: Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
+            type: e.type,
+            sets: e.type === 'cardio'
+              ? Array.from({ length: e.sets || 1 }, () => ({ duration: e.duration || 30, distance: e.distance || 0, done: false }))
+              : Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
           }))
         )
       })
@@ -45,16 +48,25 @@ export default function Workout() {
     const toAdd = (routine.exercises || []).map(e => ({
       exerciseId: e.exerciseId,
       name: e.name,
-      sets: Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
+      type: e.type,
+      sets: e.type === 'cardio'
+        ? Array.from({ length: e.sets || 1 }, () => ({ duration: e.duration || 30, distance: e.distance || 0, done: false }))
+        : Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
     }))
     setExercises(prev => [...prev, ...toAdd])
     setShowRoutinePicker(false)
   }
 
   function addExercise(ex) {
+    const isCardio = ex.type === 'cardio'
     setExercises(prev => [
       ...prev,
-      { exerciseId: ex.id, name: ex.name, sets: [{ reps: 10, weight: 0, done: false }] },
+      {
+        exerciseId: ex.id,
+        name: ex.name,
+        type: ex.type,
+        sets: isCardio ? [{ duration: 30, distance: 0, done: false }] : [{ reps: 10, weight: 0, done: false }],
+      },
     ])
     setShowPicker(false)
   }
@@ -77,7 +89,11 @@ export default function Workout() {
     setExercises(prev => prev.map((ex, i) => {
       if (i !== exIdx) return ex
       const last = ex.sets[ex.sets.length - 1] || { reps: 10, weight: 0 }
-      return { ...ex, sets: [...ex.sets, { reps: last.reps, weight: last.weight, done: false }] }
+      const isCardio = 'duration' in last
+      const newSet = isCardio
+        ? { duration: last.duration, distance: last.distance, done: false }
+        : { reps: last.reps, weight: last.weight, done: false }
+      return { ...ex, sets: [...ex.sets, newSet] }
     }))
   }
 
@@ -129,40 +145,44 @@ export default function Workout() {
               <button onClick={() => removeExercise(exIdx)} className="text-slate-500 text-xs">삭제</button>
             </div>
 
-            <div className="grid grid-cols-12 gap-1 text-xs text-slate-500 px-1">
-              <span className="col-span-1">세트</span>
-              <span className="col-span-5 text-center">무게 (kg)</span>
-              <span className="col-span-4 text-center">횟수</span>
-              <span className="col-span-2 text-center">✓</span>
-            </div>
-
-            {ex.sets.map((s, setIdx) => (
-              <div key={setIdx} className={`grid grid-cols-12 gap-1 items-center rounded-xl px-1 py-1 transition-opacity ${s.done ? 'opacity-40' : ''}`}>
-                <span className="col-span-1 text-xs text-slate-500">{setIdx + 1}</span>
-                <input
-                  type="number"
-                  inputMode="decimal"
-                  value={s.weight}
-                  onChange={e => updateSet(exIdx, setIdx, 'weight', Number(e.target.value))}
-                  className="col-span-5 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
-                />
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  value={s.reps}
-                  onChange={e => updateSet(exIdx, setIdx, 'reps', Number(e.target.value))}
-                  className="col-span-4 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
-                />
-                <button
-                  onClick={() => toggleDone(exIdx, setIdx)}
-                  className={`col-span-2 h-8 rounded-lg flex items-center justify-center text-sm transition-colors ${
-                    s.done ? 'btn-grad' : 'glass-input'
-                  }`}
-                >
-                  {s.done ? '✓' : ''}
-                </button>
-              </div>
-            ))}
+            {(() => {
+              const isCardio = ex.sets[0] && 'duration' in ex.sets[0]
+              return (
+                <>
+                  <div className="grid grid-cols-12 gap-1 text-xs text-slate-500 px-1">
+                    <span className="col-span-1">세트</span>
+                    <span className="col-span-5 text-center">{isCardio ? '시간 (분)' : '무게 (kg)'}</span>
+                    <span className="col-span-4 text-center">{isCardio ? '거리 (km)' : '횟수'}</span>
+                    <span className="col-span-2 text-center">✓</span>
+                  </div>
+                  {ex.sets.map((s, setIdx) => (
+                    <div key={setIdx} className={`grid grid-cols-12 gap-1 items-center rounded-xl px-1 py-1 transition-opacity ${s.done ? 'opacity-40' : ''}`}>
+                      <span className="col-span-1 text-xs text-slate-500">{setIdx + 1}</span>
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        value={isCardio ? s.duration : s.weight}
+                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'duration' : 'weight', Number(e.target.value))}
+                        className="col-span-5 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
+                      />
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        value={isCardio ? s.distance : s.reps}
+                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'distance' : 'reps', Number(e.target.value))}
+                        className="col-span-4 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
+                      />
+                      <button
+                        onClick={() => toggleDone(exIdx, setIdx)}
+                        className={`col-span-2 h-8 rounded-lg flex items-center justify-center text-sm transition-colors ${s.done ? 'btn-grad' : 'glass-input'}`}
+                      >
+                        {s.done ? '✓' : ''}
+                      </button>
+                    </div>
+                  ))}
+                </>
+              )
+            })()}
 
             <button
               onClick={() => addSet(exIdx)}
