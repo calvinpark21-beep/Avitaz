@@ -43,7 +43,7 @@ export default function ExercisePicker({ onSelect, onClose }) {
   )
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 flex items-end" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] bg-black/70 flex items-end" onClick={onClose}>
       <div
         className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col"
         style={{ maxHeight: '75vh' }}

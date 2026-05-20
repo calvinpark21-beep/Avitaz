@@ -256,47 +256,48 @@ function InbodyTab() {
 
       {/* 입력 모달 */}
       {showForm && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-end">
-          <div className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup p-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold">인바디 측정 입력</p>
+        <div className="fixed inset-0 z-[100] bg-black/70 flex items-end">
+          <div className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '85vh' }}>
+            <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
               <button onClick={() => setShowForm(false)} className="text-slate-400 text-sm">취소</button>
+              <p className="font-semibold">인바디 측정 입력</p>
+              <button
+                onClick={saveLog}
+                disabled={!form.date}
+                className="text-sm font-semibold text-[#ff4757] disabled:opacity-40"
+              >
+                저장
+              </button>
             </div>
 
-            <div>
-              <p className="text-xs text-slate-500 mb-1">측정일</p>
-              <input
-                type="date"
-                value={form.date}
-                onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-                className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none"
-              />
-            </div>
+            <div className="overflow-y-auto flex-1 px-4 pb-8 space-y-3">
+              <div>
+                <p className="text-xs text-slate-500 mb-1">측정일</p>
+                <input
+                  type="date"
+                  value={form.date}
+                  onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
+                  className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none"
+                />
+              </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              {INBODY_FIELDS.map(f => (
-                <div key={f.key}>
-                  <p className="text-xs text-slate-500 mb-1">{f.label} {f.unit && `(${f.unit})`}</p>
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    step="0.1"
-                    placeholder="—"
-                    value={form[f.key]}
-                    onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                    className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#ff4757]"
-                  />
-                </div>
-              ))}
+              <div className="grid grid-cols-2 gap-2">
+                {INBODY_FIELDS.map(f => (
+                  <div key={f.key}>
+                    <p className="text-xs text-slate-500 mb-1">{f.label} {f.unit && `(${f.unit})`}</p>
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      step="0.1"
+                      placeholder="—"
+                      value={form[f.key]}
+                      onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                      className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#ff4757]"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <button
-              onClick={saveLog}
-              disabled={!form.date}
-              className="w-full py-3 rounded-xl bg-[#ff4757] hover:bg-[#ff6b6b] disabled:opacity-50 font-medium transition-colors"
-            >
-              저장
-            </button>
           </div>
         </div>
       )}

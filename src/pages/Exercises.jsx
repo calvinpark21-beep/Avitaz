@@ -119,7 +119,7 @@ export default function Exercises() {
       </div>
 
       {adding && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-end">
+        <div className="fixed inset-0 z-[100] bg-black/70 flex items-end">
           <div className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '80vh' }}>
             {/* 헤더 - 항상 보임 */}
             <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
