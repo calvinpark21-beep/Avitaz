@@ -16,13 +16,13 @@ export default function History() {
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-bold pt-4">통계 · 기록</h1>
 
-      <div className="flex bg-slate-800 rounded-xl p-1 gap-1">
+      <div className="flex glass rounded-xl p-1 gap-1">
         {TABS.map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              tab === t ? 'bg-[#a855f7] text-white' : 'text-slate-400'
+              tab === t ? 'btn-grad text-white' : 'text-slate-400'
             }`}
           >
             {t}
@@ -72,14 +72,14 @@ function WorkoutGraphTab() {
         <select
           value={graphExercise ?? ''}
           onChange={e => setGraphExercise(Number(e.target.value))}
-          className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none"
+          className="w-full glass rounded-xl px-3 py-2.5 text-sm outline-none"
         >
           {exercises.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
         </select>
       </div>
 
       {graphData.length > 1 ? (
-        <div className="bg-slate-800 rounded-2xl p-4">
+        <div className="glass rounded-2xl p-4">
           <p className="text-sm font-medium mb-4">{exercises.find(e => e.id === graphExercise)?.name} 최고 무게 추이</p>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={graphData}>
@@ -164,7 +164,7 @@ function InbodyTab() {
         <p className="text-sm text-slate-400">인바디 기록</p>
         <button
           onClick={() => setShowForm(true)}
-          className="bg-[#a855f7] hover:bg-[#c084fc] px-3 py-1.5 rounded-xl text-sm"
+          className="btn-grad  px-3 py-1.5 rounded-xl text-sm"
         >
           + 측정 추가
         </button>
@@ -172,11 +172,11 @@ function InbodyTab() {
 
       {/* 최신 수치 카드 */}
       {latest && (
-        <div className="bg-slate-800 rounded-2xl p-4 space-y-3">
+        <div className="glass rounded-2xl p-4 space-y-3">
           <p className="text-xs text-slate-500">최근 측정 — {latest.date}</p>
           <div className="grid grid-cols-3 gap-2">
             {INBODY_FIELDS.filter(f => latest[f.key] != null).map(f => (
-              <div key={f.key} className="bg-slate-700 rounded-xl p-2.5 text-center">
+              <div key={f.key} className="glass rounded-xl p-2.5 text-center">
                 <p className="text-xs text-slate-400 mb-0.5">{f.label}</p>
                 <p className="font-bold text-sm" style={{ color: f.color }}>
                   {latest[f.key]}{f.unit}
@@ -194,14 +194,14 @@ function InbodyTab() {
 
       {/* 그래프 */}
       {graphData.length > 1 && (
-        <div className="bg-slate-800 rounded-2xl p-4 space-y-3">
+        <div className="glass rounded-2xl p-4 space-y-3">
           <div className="flex gap-1.5 flex-wrap">
             {INBODY_FIELDS.map(f => (
               <button
                 key={f.key}
                 onClick={() => setGraphField(f.key)}
                 className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                  graphField === f.key ? 'bg-[#a855f7] text-white' : 'bg-slate-700 text-slate-400'
+                  graphField === f.key ? 'btn-grad text-white' : 'glass text-slate-400'
                 }`}
               >
                 {f.label}
@@ -239,7 +239,7 @@ function InbodyTab() {
 
       <div className="space-y-2">
         {logs.map(log => (
-          <div key={log.id} className="bg-slate-800 rounded-xl px-4 py-3 flex items-center justify-between">
+          <div key={log.id} className="glass rounded-xl px-4 py-3 flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">{log.date}</p>
               <div className="flex gap-2 mt-1 flex-wrap">
@@ -259,14 +259,14 @@ function InbodyTab() {
       {showForm && (
         <ModalPortal>
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-end">
-          <div className="w-full max-w-lg mx-auto bg-[#0d0d12] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '85vh' }}>
+          <div className="w-full max-w-lg mx-auto glass rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '85vh' }}>
             <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
               <button onClick={() => setShowForm(false)} className="text-slate-400 text-sm">취소</button>
               <p className="font-semibold">인바디 측정 입력</p>
               <button
                 onClick={saveLog}
                 disabled={!form.date}
-                className="text-sm font-semibold text-[#a855f7] disabled:opacity-40"
+                className="text-sm font-semibold text-violet-400 disabled:opacity-40"
               >
                 저장
               </button>
@@ -279,7 +279,7 @@ function InbodyTab() {
                   type="date"
                   value={form.date}
                   onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-                  className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none"
+                  className="w-full glass rounded-xl px-3 py-2.5 text-sm outline-none"
                 />
               </div>
 
@@ -294,7 +294,7 @@ function InbodyTab() {
                       placeholder="—"
                       value={form[f.key]}
                       onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                      className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#a855f7]"
+                      className="w-full glass rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-violet-500"
                     />
                   </div>
                 ))}

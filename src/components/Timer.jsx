@@ -41,7 +41,7 @@ export default function Timer() {
   const circumference = 2 * Math.PI * 38
 
   return (
-    <div className="bg-slate-800 rounded-2xl p-4">
+    <div className="glass rounded-2xl p-4">
       <p className="text-xs text-slate-400 mb-3">휴식 타이머</p>
       <div className="flex items-center gap-4">
         <div className="relative w-20 h-20 shrink-0">
@@ -68,7 +68,7 @@ export default function Timer() {
               <button
                 key={s}
                 onClick={() => { setTarget(s); start(s) }}
-                className="text-xs px-2 py-1 rounded-lg bg-slate-700 hover:bg-[#a855f7] transition-colors"
+                className="text-xs px-2 py-1 rounded-lg glass hover:btn-grad transition-colors"
               >
                 {s}s
               </button>
@@ -78,14 +78,14 @@ export default function Timer() {
             {!running ? (
               <button
                 onClick={() => start()}
-                className="flex-1 py-1.5 rounded-xl bg-[#a855f7] hover:bg-[#c084fc] text-sm font-medium transition-colors"
+                className="flex-1 py-1.5 rounded-xl btn-grad  text-sm font-medium transition-colors"
               >
                 시작
               </button>
             ) : (
               <button
                 onClick={stop}
-                className="flex-1 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-sm font-medium transition-colors"
+                className="flex-1 py-1.5 rounded-xl glass hover:bg-slate-600 text-sm font-medium transition-colors"
               >
                 정지
               </button>

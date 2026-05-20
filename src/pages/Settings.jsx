@@ -51,15 +51,15 @@ export default function Settings() {
           { label: '루틴', value: stats.routines, unit: '개' },
           { label: '인바디', value: stats.inbody, unit: '회' },
         ].map(s => (
-          <div key={s.label} className="bg-[#16161e] rounded-2xl p-3 text-center animate-fadein">
-            <p className="text-2xl font-bold text-[#a855f7]">{s.value}</p>
+          <div key={s.label} className="glass rounded-2xl p-3 text-center animate-fadein">
+            <p className="text-2xl font-bold text-violet-400">{s.value}</p>
             <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
           </div>
         ))}
       </div>
 
       {/* 프로필 */}
-      <div className="bg-[#16161e] rounded-2xl p-4 space-y-3 animate-fadein">
+      <div className="glass rounded-2xl p-4 space-y-3 animate-fadein">
         <p className="text-sm font-semibold text-slate-300">프로필</p>
         <div>
           <p className="text-xs text-slate-500 mb-1.5">이름 (선택)</p>
@@ -67,7 +67,7 @@ export default function Settings() {
             value={name}
             onChange={e => setName(e.target.value)}
             placeholder="내 이름"
-            className="w-full bg-[#1e1e2a] rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#a855f7] transition-all"
+            className="w-full glass-input rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-1 focus:ring-violet-500 transition-all"
           />
         </div>
         <div>
@@ -79,8 +79,8 @@ export default function Settings() {
                 onClick={() => setGoal(g.value)}
                 className={`py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                   goal === g.value
-                    ? 'bg-[#a855f7] text-white scale-[1.02]'
-                    : 'bg-[#1e1e2a] text-slate-400'
+                    ? 'btn-grad text-white scale-[1.02]'
+                    : 'glass-input text-slate-400'
                 }`}
               >
                 {g.label}
@@ -91,7 +91,7 @@ export default function Settings() {
         <button
           onClick={save}
           className={`w-full py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
-            saved ? 'bg-emerald-600' : 'bg-[#a855f7] hover:bg-[#c084fc]'
+            saved ? 'bg-emerald-600' : 'btn-grad '
           }`}
         >
           {saved ? '저장됨 ✓' : '저장'}
@@ -99,7 +99,7 @@ export default function Settings() {
       </div>
 
       {/* 앱 정보 */}
-      <div className="bg-[#16161e] rounded-2xl p-4 space-y-3 animate-fadein">
+      <div className="glass rounded-2xl p-4 space-y-3 animate-fadein">
         <p className="text-sm font-semibold text-slate-300">앱 정보</p>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
@@ -118,7 +118,7 @@ export default function Settings() {
       </div>
 
       {/* 종목 관리 */}
-      <div className="bg-[#16161e] rounded-2xl overflow-hidden animate-fadein">
+      <div className="glass rounded-2xl overflow-hidden animate-fadein">
         <button
           onClick={() => navigate('/exercises')}
           className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-white/5 transition-colors"
@@ -134,7 +134,7 @@ export default function Settings() {
       </div>
 
       {/* 데이터 관리 */}
-      <div className="bg-[#16161e] rounded-2xl p-4 space-y-2 animate-fadein">
+      <div className="glass rounded-2xl p-4 space-y-2 animate-fadein">
         <p className="text-sm font-semibold text-slate-300">데이터 관리</p>
         <p className="text-xs text-slate-500">운동 기록과 인바디 데이터를 초기화합니다. 루틴과 PT 프로그램은 유지됩니다.</p>
         <button
@@ -149,7 +149,7 @@ export default function Settings() {
             await seedExercises()
             window.location.reload()
           }}
-          className="w-full py-2.5 rounded-xl text-sm font-medium bg-slate-700/50 text-slate-400 hover:bg-slate-700 transition-colors"
+          className="w-full py-2.5 rounded-xl text-sm font-medium glass/50 text-slate-400 hover:glass transition-colors"
         >
           종목 목록 초기화 (중복 제거)
         </button>

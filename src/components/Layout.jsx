@@ -18,7 +18,7 @@ export default function Layout() {
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 max-w-lg mx-auto">
-        <div className="bg-[#0d0d12]/95 border-t border-white/5 safe-bottom backdrop-blur-sm">
+        <div className="safe-bottom backdrop-blur-2xl" style={{ background: 'rgba(7,7,16,0.85)', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
           <div className="flex justify-around items-center h-14">
             {NAV.map(({ to, label, icon: Icon, main }) => (
               <NavLink
@@ -27,14 +27,14 @@ export default function Layout() {
                 end={to === '/'}
                 className={({ isActive }) =>
                   `relative flex flex-col items-center gap-0.5 px-3 py-1 text-xs transition-all duration-200 ${
-                    isActive ? 'text-[#a855f7]' : 'text-slate-600'
+                    isActive ? 'text-violet-400' : 'text-slate-600'
                   } ${main ? '-mt-3' : ''}`
                 }
               >
                 {({ isActive }) => (
                   <>
                     {isActive && !main && (
-                      <span className="absolute -top-0 w-4 h-0.5 rounded-full bg-[#a855f7]" />
+                      <span className="absolute -top-0 w-5 h-0.5 rounded-full btn-grad" />
                     )}
                     <Icon active={isActive} />
                     <span className="font-medium">{label}</span>
@@ -67,9 +67,8 @@ function ListIcon({ active }) {
 
 function PlayIcon({ active }) {
   return (
-    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-200 ${
-      active ? 'bg-[#a855f7] scale-105 shadow-[#a855f7]/40' : 'bg-[#a855f7]/90 shadow-[#a855f7]/20'
-    }`}>
+    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-200 btn-grad ${active ? 'scale-105' : ''}`}
+      style={{ boxShadow: '0 4px 20px rgba(124,58,237,0.45)' }}>
       <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
         <path d="M8 5v14l11-7z" />
       </svg>

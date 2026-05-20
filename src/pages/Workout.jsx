@@ -96,7 +96,7 @@ export default function Workout() {
         <button
           onClick={finish}
           disabled={saving}
-          className="bg-[#a855f7] hover:bg-[#c084fc] disabled:opacity-50 px-4 py-2 rounded-xl text-sm font-medium"
+          className="btn-grad  disabled:opacity-50 px-4 py-2 rounded-xl text-sm font-medium"
         >
           완료
         </button>
@@ -106,7 +106,7 @@ export default function Workout() {
 
       <div className="space-y-3">
         {exercises.map((ex, exIdx) => (
-          <div key={exIdx} className="bg-[#16161e] rounded-2xl p-4 space-y-3">
+          <div key={exIdx} className="glass rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
               <p className="font-semibold">{ex.name}</p>
               <button onClick={() => removeExercise(exIdx)} className="text-slate-500 text-xs">삭제</button>
@@ -127,19 +127,19 @@ export default function Workout() {
                   inputMode="decimal"
                   value={s.weight}
                   onChange={e => updateSet(exIdx, setIdx, 'weight', Number(e.target.value))}
-                  className="col-span-5 bg-[#1e1e2a] rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-[#a855f7]"
+                  className="col-span-5 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
                 />
                 <input
                   type="number"
                   inputMode="numeric"
                   value={s.reps}
                   onChange={e => updateSet(exIdx, setIdx, 'reps', Number(e.target.value))}
-                  className="col-span-4 bg-[#1e1e2a] rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-[#a855f7]"
+                  className="col-span-4 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
                 />
                 <button
                   onClick={() => toggleDone(exIdx, setIdx)}
                   className={`col-span-2 h-8 rounded-lg flex items-center justify-center text-sm transition-colors ${
-                    s.done ? 'bg-[#a855f7]' : 'bg-[#1e1e2a]'
+                    s.done ? 'btn-grad' : 'glass-input'
                   }`}
                 >
                   {s.done ? '✓' : ''}
@@ -149,7 +149,7 @@ export default function Workout() {
 
             <button
               onClick={() => addSet(exIdx)}
-              className="w-full py-1.5 rounded-xl bg-[#1e1e2a] hover:bg-[#252530] text-sm text-slate-400 transition-colors"
+              className="w-full py-1.5 rounded-xl glass-input hover:bg-[#252530] text-sm text-slate-400 transition-colors"
             >
               + 세트 추가
             </button>
@@ -159,7 +159,7 @@ export default function Workout() {
 
       <button
         onClick={() => setShowPicker(true)}
-        className="w-full py-3 rounded-2xl border-2 border-dashed border-[#333] text-slate-400 hover:border-[#a855f7] hover:text-[#a855f7] transition-colors"
+        className="w-full py-3 rounded-2xl border-2 border-dashed border-[#333] text-slate-400 hover:border-violet-500 hover:text-violet-400 transition-colors"
       >
         + 종목 추가
       </button>

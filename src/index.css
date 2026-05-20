@@ -8,8 +8,10 @@
 
 body {
   margin: 0;
-  background-color: #0d0d12;
-  color: #f1f5f9;
+  background: #070710;
+  background-image: radial-gradient(ellipse 80% 50% at 50% -5%, rgba(124, 58, 237, 0.18) 0%, transparent 65%);
+  background-attachment: fixed;
+  color: #f8fafc;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
@@ -29,22 +31,50 @@ body {
   padding-top: env(safe-area-inset-top);
 }
 
-/* 페이지 전환 애니메이션 */
+/* 그래디언트 버튼 */
+.btn-grad {
+  background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+  transition: opacity 0.15s;
+}
+.btn-grad:hover { opacity: 0.88; }
+.btn-grad:disabled { opacity: 0.35; }
+
+/* 글래스 카드 */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 인풋 */
+.glass-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 그래디언트 텍스트 */
+.text-grad {
+  background: linear-gradient(135deg, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 페이지 전환 */
 @keyframes pagein {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: none; }
 }
 .animate-pagein {
-  animation: pagein 0.22s ease-out forwards;
+  animation: pagein 0.25s ease-out forwards;
 }
 
-/* 카드 fade-in */
+/* fade-in */
 @keyframes fadein {
   from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 .animate-fadein {
-  animation: fadein 0.25s ease-out both;
+  animation: fadein 0.25s ease-out forwards;
 }
 
 /* 모달 슬라이드업 */
@@ -53,15 +83,13 @@ body {
   to   { transform: translateY(0); }
 }
 .animate-slideup {
-  animation: slideup 0.28s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: slideup 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
-/* select 스타일 */
 select {
   appearance: none;
   -webkit-appearance: none;
 }
 
-/* 스크롤바 숨기기 */
 ::-webkit-scrollbar { display: none; }
 * { scrollbar-width: none; }

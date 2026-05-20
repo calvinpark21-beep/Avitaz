@@ -31,13 +31,13 @@ export default function ExercisePicker({ onSelect, onClose }) {
     <button
       key={ex.id}
       onClick={() => onSelect(ex)}
-      className="w-full flex items-center justify-between px-3 py-3 rounded-xl bg-[#1e1e1e] hover:bg-[#1e1e2a] active:scale-[0.98] transition-all text-left"
+      className="w-full flex items-center justify-between px-3 py-3 rounded-xl bg-[#1e1e1e] hover:glass-input active:scale-[0.98] transition-all text-left"
     >
       <div className="min-w-0">
         <p className="text-sm font-medium">{ex.name}</p>
         {ex.note && <p className="text-xs text-slate-500 mt-0.5">{ex.note}</p>}
       </div>
-      <span className="text-xs text-slate-500 bg-[#1e1e2a] px-2 py-0.5 rounded-full ml-2 shrink-0">
+      <span className="text-xs text-slate-500 glass-input px-2 py-0.5 rounded-full ml-2 shrink-0">
         {ex.category}
       </span>
     </button>
@@ -47,13 +47,13 @@ export default function ExercisePicker({ onSelect, onClose }) {
     <ModalPortal>
     <div className="fixed inset-0 z-[100] bg-black/70 flex items-end" onClick={onClose}>
       <div
-        className="w-full max-w-lg mx-auto bg-[#0d0d12] rounded-t-3xl animate-slideup flex flex-col"
+        className="w-full max-w-lg mx-auto glass rounded-t-3xl animate-slideup flex flex-col"
         style={{ maxHeight: '75vh' }}
         onClick={e => e.stopPropagation()}
       >
         {/* 핸들 */}
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full bg-slate-700" />
+          <div className="w-10 h-1 rounded-full glass" />
         </div>
 
         <div className="px-4 pb-2 space-y-3">
@@ -68,7 +68,7 @@ export default function ExercisePicker({ onSelect, onClose }) {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="종목 검색..."
-            className="w-full bg-[#1e1e1e] rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#a855f7]"
+            className="w-full bg-[#1e1e1e] rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-violet-500"
           />
 
           {/* 카테고리 탭 */}
@@ -79,8 +79,8 @@ export default function ExercisePicker({ onSelect, onClose }) {
                 onClick={() => setCategory(c)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                   category === c
-                    ? 'bg-[#a855f7] text-white'
-                    : 'bg-[#1e1e2a] text-slate-400'
+                    ? 'btn-grad text-white'
+                    : 'glass-input text-slate-400'
                 }`}
               >
                 {c}
@@ -95,7 +95,7 @@ export default function ExercisePicker({ onSelect, onClose }) {
           {/* 내가 추가한 종목 - 항상 맨 위 */}
           {myExercises.length > 0 && !search && (
             <div>
-              <p className="text-xs font-semibold mb-1.5 px-1 sticky top-0 bg-[#0d0d12] py-1 text-[#a855f7]">
+              <p className="text-xs font-semibold mb-1.5 px-1 sticky top-0 glass py-1 text-violet-400">
                 내가 추가한 종목
               </p>
               <div className="space-y-1">
@@ -109,7 +109,7 @@ export default function ExercisePicker({ onSelect, onClose }) {
           {Object.entries(grouped).map(([cat, exs]) => (
             <div key={cat}>
               {category === '전체' && (
-                <p className="text-xs text-slate-500 font-semibold mb-1.5 px-1 sticky top-0 bg-[#0d0d12] py-1">{cat}</p>
+                <p className="text-xs text-slate-500 font-semibold mb-1.5 px-1 sticky top-0 glass py-1">{cat}</p>
               )}
               <div className="space-y-1">
                 {exs.map(ex => <ExerciseRow key={ex.id} ex={ex} />)}

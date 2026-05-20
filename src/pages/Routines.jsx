@@ -43,7 +43,7 @@ export default function Routines() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-4">
         <h1 className="text-xl font-bold">루틴</h1>
-        <button onClick={startNew} className="bg-[#a855f7] hover:bg-[#c084fc] px-3 py-1.5 rounded-xl text-sm">
+        <button onClick={startNew} className="btn-grad  px-3 py-1.5 rounded-xl text-sm">
           + 새 루틴
         </button>
       </div>
@@ -58,7 +58,7 @@ export default function Routines() {
 
       <div className="space-y-3">
         {routines.map(r => (
-          <div key={r.id} className="bg-slate-800 rounded-2xl p-4">
+          <div key={r.id} className="glass rounded-2xl p-4">
             <div className="flex items-start justify-between">
               <div>
                 <p className="font-semibold">{r.name}</p>
@@ -67,13 +67,13 @@ export default function Routines() {
               <div className="flex gap-2">
                 <button
                   onClick={() => navigate('/workout', { state: { routineId: r.id } })}
-                  className="text-xs bg-[#a855f7] px-3 py-1.5 rounded-lg"
+                  className="text-xs btn-grad px-3 py-1.5 rounded-lg"
                 >
                   시작
                 </button>
                 <button
                   onClick={() => setEditing(r)}
-                  className="text-xs bg-slate-700 px-3 py-1.5 rounded-lg"
+                  className="text-xs glass px-3 py-1.5 rounded-lg"
                 >
                   편집
                 </button>
@@ -88,7 +88,7 @@ export default function Routines() {
             {r.exercises?.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {r.exercises.map((e, i) => (
-                  <span key={i} className="text-xs bg-slate-700 px-2 py-0.5 rounded-full text-slate-300">
+                  <span key={i} className="text-xs glass px-2 py-0.5 rounded-full text-slate-300">
                     {e.name}
                   </span>
                 ))}
@@ -126,7 +126,7 @@ function RoutineEditor({ initial, onSave, onCancel }) {
         <button
           onClick={() => onSave({ ...initial, name, exercises })}
           disabled={!name}
-          className="bg-[#a855f7] hover:bg-[#c084fc] disabled:opacity-50 px-4 py-1.5 rounded-xl text-sm"
+          className="btn-grad  disabled:opacity-50 px-4 py-1.5 rounded-xl text-sm"
         >
           저장
         </button>
@@ -136,12 +136,12 @@ function RoutineEditor({ initial, onSave, onCancel }) {
         value={name}
         onChange={e => setName(e.target.value)}
         placeholder="루틴 이름"
-        className="w-full bg-[#16161e] rounded-xl px-4 py-3 text-lg font-semibold outline-none focus:ring-1 focus:ring-[#a855f7]"
+        className="w-full glass rounded-xl px-4 py-3 text-lg font-semibold outline-none focus:ring-1 focus:ring-violet-500"
       />
 
       <div className="space-y-2">
         {exercises.map((ex, idx) => (
-          <div key={idx} className="bg-[#16161e] rounded-xl p-3">
+          <div key={idx} className="glass rounded-xl p-3">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm font-medium">{ex.name}</p>
               <button onClick={() => removeExercise(idx)} className="text-xs text-slate-500">삭제</button>
@@ -155,7 +155,7 @@ function RoutineEditor({ initial, onSave, onCancel }) {
                     inputMode="numeric"
                     value={ex[field]}
                     onChange={e => updateExercise(idx, field, e.target.value)}
-                    className="w-full bg-[#1e1e2a] rounded-lg text-center text-sm py-1.5 outline-none focus:ring-1 focus:ring-[#a855f7]"
+                    className="w-full glass-input rounded-lg text-center text-sm py-1.5 outline-none focus:ring-1 focus:ring-violet-500"
                   />
                 </div>
               ))}
@@ -166,7 +166,7 @@ function RoutineEditor({ initial, onSave, onCancel }) {
 
       <button
         onClick={() => setShowPicker(true)}
-        className="w-full py-3 rounded-2xl border-2 border-dashed border-[#333] text-slate-400 hover:border-[#a855f7] hover:text-[#a855f7] transition-colors"
+        className="w-full py-3 rounded-2xl border-2 border-dashed border-[#333] text-slate-400 hover:border-violet-500 hover:text-violet-400 transition-colors"
       >
         + 종목 추가
       </button>
