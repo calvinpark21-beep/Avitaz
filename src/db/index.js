@@ -17,7 +17,7 @@ db.version(2).stores({
   inbodyLogs: '++id, date',
 })
 
-const SEED_VERSION = 'v10'
+const SEED_VERSION = 'v11'
 
 const EXERCISES = [
   // 가슴
@@ -88,6 +88,9 @@ const EXERCISES = [
   { name: '어깨 회전', category: '스트레칭' },
   { name: '전신 스트레칭', category: '스트레칭' },
   { name: '광배근 스트레칭', category: '스트레칭' },
+  // 유산소
+  { name: '걷기', category: '유산소' },
+  { name: '슬로우러닝', category: '유산소' },
   // PT 운동 (5/20 — 최신)
   { name: '옆구리 비틀기', category: 'PT 운동', note: '5/20 · 네발자세에서 비틀기' },
   { name: '비둘기 자세', category: 'PT 운동', note: '5/20 · 한쪽 다리 책상다리' },
