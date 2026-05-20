@@ -64,7 +64,6 @@ export default function ExercisePicker({ onSelect, onClose }) {
 
           {/* 검색 */}
           <input
-            autoFocus
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="종목 검색..."

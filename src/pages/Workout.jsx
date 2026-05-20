@@ -162,6 +162,7 @@ export default function Workout() {
                         type="number"
                         inputMode="decimal"
                         value={isCardio ? s.duration : s.weight}
+                        onFocus={e => e.target.select()}
                         onChange={e => updateSet(exIdx, setIdx, isCardio ? 'duration' : 'weight', Number(e.target.value))}
                         className="col-span-5 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
                       />
@@ -169,6 +170,7 @@ export default function Workout() {
                         type="number"
                         inputMode="decimal"
                         value={isCardio ? s.distance : s.reps}
+                        onFocus={e => e.target.select()}
                         onChange={e => updateSet(exIdx, setIdx, isCardio ? 'distance' : 'reps', Number(e.target.value))}
                         className="col-span-4 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
                       />

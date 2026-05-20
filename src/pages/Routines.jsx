@@ -173,6 +173,7 @@ function RoutineEditor({ initial, onSave, onCancel }) {
                     type="number"
                     inputMode="decimal"
                     value={ex[field] ?? 0}
+                    onFocus={e => e.target.select()}
                     onChange={e => updateExercise(idx, field, e.target.value)}
                     className="w-full glass-input rounded-lg text-center text-sm py-1.5 outline-none focus:ring-1 focus:ring-violet-500"
                   />
