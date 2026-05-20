@@ -65,7 +65,7 @@ export default function Exercises() {
         <h1 className="text-xl font-bold">종목 목록</h1>
         <button
           onClick={() => setAdding(true)}
-          className="bg-[#ff4757] hover:bg-[#ff6b6b] px-3 py-1.5 rounded-xl text-sm"
+          className="bg-[#a855f7] hover:bg-[#c084fc] px-3 py-1.5 rounded-xl text-sm"
         >
           + 추가
         </button>
@@ -75,7 +75,7 @@ export default function Exercises() {
         value={search}
         onChange={e => setSearch(e.target.value)}
         placeholder="종목 검색..."
-        className="w-full bg-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#ff4757]"
+        className="w-full bg-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#a855f7]"
       />
 
       <div className="flex flex-wrap gap-2">
@@ -84,7 +84,7 @@ export default function Exercises() {
             key={c}
             onClick={() => setCategory(c)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-              category === c ? 'bg-[#ff4757] text-white' : 'bg-[#222] text-slate-400'
+              category === c ? 'bg-[#a855f7] text-white' : 'bg-[#16161e] text-slate-400'
             }`}
           >
             {c}
@@ -122,7 +122,7 @@ export default function Exercises() {
       {adding && (
         <ModalPortal>
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-end">
-          <div className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '80vh' }}>
+          <div className="w-full max-w-lg mx-auto bg-[#0d0d12] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '80vh' }}>
             {/* 헤더 - 항상 보임 */}
             <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
               <button onClick={() => setAdding(false)} className="text-slate-400 text-sm">취소</button>
@@ -130,7 +130,7 @@ export default function Exercises() {
               <button
                 onClick={addExercise}
                 disabled={!newName.trim()}
-                className="text-sm font-semibold text-[#ff4757] disabled:opacity-40"
+                className="text-sm font-semibold text-[#a855f7] disabled:opacity-40"
               >
                 추가
               </button>
@@ -143,13 +143,13 @@ export default function Exercises() {
                 onChange={e => setNewName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && addExercise()}
                 placeholder="종목 이름"
-                className="w-full bg-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#ff4757]"
+                className="w-full bg-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#a855f7]"
               />
               <input
                 value={newNote}
                 onChange={e => setNewNote(e.target.value)}
                 placeholder="가이드 / 메모 (선택 · 예: 15회 × 3세트)"
-                className="w-full bg-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#ff4757] text-slate-400"
+                className="w-full bg-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#a855f7] text-slate-400"
               />
               <div>
                 <p className="text-xs text-slate-500 mb-2">카테고리</p>
@@ -159,7 +159,7 @@ export default function Exercises() {
                       key={c}
                       onClick={() => setNewCategory(c)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                        newCategory === c ? 'bg-[#ff4757] text-white' : 'bg-slate-700 text-slate-400'
+                        newCategory === c ? 'bg-[#a855f7] text-white' : 'bg-slate-700 text-slate-400'
                       }`}
                     >
                       {c}

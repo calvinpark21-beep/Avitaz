@@ -22,7 +22,7 @@ export default function History() {
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              tab === t ? 'bg-[#ff4757] text-white' : 'text-slate-400'
+              tab === t ? 'bg-[#a855f7] text-white' : 'text-slate-400'
             }`}
           >
             {t}
@@ -91,7 +91,7 @@ function WorkoutGraphTab() {
                 labelStyle={{ color: '#94a3b8' }}
                 formatter={v => [`${v}kg`, '무게']}
               />
-              <Line type="monotone" dataKey="weight" stroke="#ff4757" strokeWidth={2} dot={{ fill: "#ff4757", r: 4 }} />
+              <Line type="monotone" dataKey="weight" stroke="#a855f7" strokeWidth={2} dot={{ fill: "#a855f7", r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -107,7 +107,7 @@ function WorkoutGraphTab() {
 
 /* ─── 인바디 탭 ─── */
 const INBODY_FIELDS = [
-  { key: 'weight',     label: '체중',    unit: 'kg',  color: "#ff4757" },
+  { key: 'weight',     label: '체중',    unit: 'kg',  color: "#a855f7" },
   { key: 'muscle',     label: '골격근량', unit: 'kg',  color: '#10b981' },
   { key: 'fat',        label: '체지방량', unit: 'kg',  color: '#f59e0b' },
   { key: 'fatPct',     label: '체지방률', unit: '%',   color: '#ef4444' },
@@ -164,7 +164,7 @@ function InbodyTab() {
         <p className="text-sm text-slate-400">인바디 기록</p>
         <button
           onClick={() => setShowForm(true)}
-          className="bg-[#ff4757] hover:bg-[#ff6b6b] px-3 py-1.5 rounded-xl text-sm"
+          className="bg-[#a855f7] hover:bg-[#c084fc] px-3 py-1.5 rounded-xl text-sm"
         >
           + 측정 추가
         </button>
@@ -201,7 +201,7 @@ function InbodyTab() {
                 key={f.key}
                 onClick={() => setGraphField(f.key)}
                 className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                  graphField === f.key ? 'bg-[#ff4757] text-white' : 'bg-slate-700 text-slate-400'
+                  graphField === f.key ? 'bg-[#a855f7] text-white' : 'bg-slate-700 text-slate-400'
                 }`}
               >
                 {f.label}
@@ -259,14 +259,14 @@ function InbodyTab() {
       {showForm && (
         <ModalPortal>
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-end">
-          <div className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '85vh' }}>
+          <div className="w-full max-w-lg mx-auto bg-[#0d0d12] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '85vh' }}>
             <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
               <button onClick={() => setShowForm(false)} className="text-slate-400 text-sm">취소</button>
               <p className="font-semibold">인바디 측정 입력</p>
               <button
                 onClick={saveLog}
                 disabled={!form.date}
-                className="text-sm font-semibold text-[#ff4757] disabled:opacity-40"
+                className="text-sm font-semibold text-[#a855f7] disabled:opacity-40"
               >
                 저장
               </button>
@@ -294,7 +294,7 @@ function InbodyTab() {
                       placeholder="—"
                       value={form[f.key]}
                       onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                      className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#ff4757]"
+                      className="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#a855f7]"
                     />
                   </div>
                 ))}

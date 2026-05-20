@@ -43,7 +43,7 @@ export default function Routines() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between pt-4">
         <h1 className="text-xl font-bold">루틴</h1>
-        <button onClick={startNew} className="bg-[#ff4757] hover:bg-[#ff6b6b] px-3 py-1.5 rounded-xl text-sm">
+        <button onClick={startNew} className="bg-[#a855f7] hover:bg-[#c084fc] px-3 py-1.5 rounded-xl text-sm">
           + 새 루틴
         </button>
       </div>
@@ -67,7 +67,7 @@ export default function Routines() {
               <div className="flex gap-2">
                 <button
                   onClick={() => navigate('/workout', { state: { routineId: r.id } })}
-                  className="text-xs bg-[#ff4757] px-3 py-1.5 rounded-lg"
+                  className="text-xs bg-[#a855f7] px-3 py-1.5 rounded-lg"
                 >
                   시작
                 </button>
@@ -126,7 +126,7 @@ function RoutineEditor({ initial, onSave, onCancel }) {
         <button
           onClick={() => onSave({ ...initial, name, exercises })}
           disabled={!name}
-          className="bg-[#ff4757] hover:bg-[#ff6b6b] disabled:opacity-50 px-4 py-1.5 rounded-xl text-sm"
+          className="bg-[#a855f7] hover:bg-[#c084fc] disabled:opacity-50 px-4 py-1.5 rounded-xl text-sm"
         >
           저장
         </button>
@@ -136,12 +136,12 @@ function RoutineEditor({ initial, onSave, onCancel }) {
         value={name}
         onChange={e => setName(e.target.value)}
         placeholder="루틴 이름"
-        className="w-full bg-[#222] rounded-xl px-4 py-3 text-lg font-semibold outline-none focus:ring-1 focus:ring-[#ff4757]"
+        className="w-full bg-[#16161e] rounded-xl px-4 py-3 text-lg font-semibold outline-none focus:ring-1 focus:ring-[#a855f7]"
       />
 
       <div className="space-y-2">
         {exercises.map((ex, idx) => (
-          <div key={idx} className="bg-[#222] rounded-xl p-3">
+          <div key={idx} className="bg-[#16161e] rounded-xl p-3">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm font-medium">{ex.name}</p>
               <button onClick={() => removeExercise(idx)} className="text-xs text-slate-500">삭제</button>
@@ -155,7 +155,7 @@ function RoutineEditor({ initial, onSave, onCancel }) {
                     inputMode="numeric"
                     value={ex[field]}
                     onChange={e => updateExercise(idx, field, e.target.value)}
-                    className="w-full bg-[#2a2a2a] rounded-lg text-center text-sm py-1.5 outline-none focus:ring-1 focus:ring-[#ff4757]"
+                    className="w-full bg-[#1e1e2a] rounded-lg text-center text-sm py-1.5 outline-none focus:ring-1 focus:ring-[#a855f7]"
                   />
                 </div>
               ))}
@@ -166,7 +166,7 @@ function RoutineEditor({ initial, onSave, onCancel }) {
 
       <button
         onClick={() => setShowPicker(true)}
-        className="w-full py-3 rounded-2xl border-2 border-dashed border-[#333] text-slate-400 hover:border-[#ff4757] hover:text-[#ff4757] transition-colors"
+        className="w-full py-3 rounded-2xl border-2 border-dashed border-[#333] text-slate-400 hover:border-[#a855f7] hover:text-[#a855f7] transition-colors"
       >
         + 종목 추가
       </button>

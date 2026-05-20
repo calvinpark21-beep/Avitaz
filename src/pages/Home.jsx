@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <div className="p-4 space-y-3">
       {/* 캘린더 */}
-      <div className="bg-[#222] rounded-2xl p-4">
+      <div className="bg-[#16161e] rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <button onClick={prevMonth} className="w-8 h-8 rounded-xl bg-slate-700 text-slate-200 text-xl leading-none flex items-center justify-center">‹</button>
           <div className="text-center">
@@ -98,15 +98,15 @@ export default function Home() {
               >
                 <span className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-all
                   ${isSelected
-                    ? 'bg-[#ff4757] text-white'
+                    ? 'bg-[#a855f7] text-white'
                     : isTodayCell
-                    ? 'border border-[#ff4757] text-[#ff4757]'
+                    ? 'border border-[#a855f7] text-[#a855f7]'
                     : 'text-slate-300'}
                 `}>
                   {day}
                 </span>
                 {hasLog && (
-                  <span className={`absolute bottom-0.5 w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-[#ff4757]'}`} />
+                  <span className={`absolute bottom-0.5 w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-[#a855f7]'}`} />
                 )}
               </button>
             )
@@ -120,7 +120,7 @@ export default function Home() {
           <div className="flex items-center justify-between px-1">
             <p className="text-sm font-semibold">{selLabel}</p>
             {selectedDate === todayStr && (
-              <span className="text-xs bg-[#ff4757]/20 text-[#ff6b6b] px-2 py-0.5 rounded-full">오늘</span>
+              <span className="text-xs bg-[#a855f7]/20 text-[#c084fc] px-2 py-0.5 rounded-full">오늘</span>
             )}
           </div>
 
@@ -130,8 +130,8 @@ export default function Home() {
                 <p className="text-xs text-slate-500 px-1">⏱ {fmtDuration(selectedLog.duration)} · {selectedLog.exercises?.length ?? 0}개 종목</p>
               )}
               {(selectedLog.exercises || []).map((ex, i) => (
-                <div key={i} className="bg-[#222] rounded-xl px-4 py-3">
-                  <p className="text-sm font-semibold text-[#ff6b6b] mb-1.5">{ex.name}</p>
+                <div key={i} className="bg-[#16161e] rounded-xl px-4 py-3">
+                  <p className="text-sm font-semibold text-[#c084fc] mb-1.5">{ex.name}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {(ex.sets || []).map((s, j) => (
                       <span key={j} className="text-xs bg-slate-700 px-2.5 py-1 rounded-lg text-slate-300">
@@ -152,13 +152,13 @@ export default function Home() {
             <div className="space-y-2 pt-1">
               <button
                 onClick={() => setShowPicker(true)}
-                className="w-full bg-[#ff4757] hover:bg-[#ff6b6b] rounded-2xl py-4 font-semibold text-sm transition-colors"
+                className="w-full bg-[#a855f7] hover:bg-[#c084fc] rounded-2xl py-4 font-semibold text-sm transition-colors"
               >
                 루틴으로 시작
               </button>
               <button
                 onClick={() => navigate('/workout')}
-                className="w-full bg-[#222] hover:bg-[#2a2a2a] rounded-2xl py-3.5 text-sm text-slate-300 transition-colors"
+                className="w-full bg-[#16161e] hover:bg-[#1e1e2a] rounded-2xl py-3.5 text-sm text-slate-300 transition-colors"
               >
                 빈 운동 시작
               </button>
@@ -172,7 +172,7 @@ export default function Home() {
         <ModalPortal>
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-end" onClick={() => setShowPicker(false)}>
           <div
-            className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col"
+            className="w-full max-w-lg mx-auto bg-[#0d0d12] rounded-t-3xl animate-slideup flex flex-col"
             style={{ maxHeight: '80vh' }}
             onClick={e => e.stopPropagation()}
           >
@@ -191,13 +191,13 @@ export default function Home() {
                   <button
                     key={r.id}
                     onClick={() => { setShowPicker(false); navigate('/workout', { state: { routineId: r.id } }) }}
-                    className="w-full bg-[#222] rounded-2xl px-4 py-3.5 flex items-center justify-between text-left"
+                    className="w-full bg-[#16161e] rounded-2xl px-4 py-3.5 flex items-center justify-between text-left"
                   >
                     <div>
                       <p className="font-medium text-sm">{r.name}</p>
                       <p className="text-xs text-slate-500 mt-0.5">{r.exercises?.length ?? 0}개 종목</p>
                     </div>
-                    <span className="text-[#ff4757] text-sm">→</span>
+                    <span className="text-[#a855f7] text-sm">→</span>
                   </button>
                 ))
               )}

@@ -39,7 +39,7 @@ export default function PTProgram() {
         <h1 className="text-xl font-bold">PT 프로그램</h1>
         <button
           onClick={() => setEditing({ name: '', schedule: [] })}
-          className="bg-[#ff4757] hover:bg-[#ff6b6b] px-3 py-1.5 rounded-xl text-sm"
+          className="bg-[#a855f7] hover:bg-[#c084fc] px-3 py-1.5 rounded-xl text-sm"
         >
           + 새 프로그램
         </button>
@@ -67,7 +67,7 @@ export default function PTProgram() {
               {DAYS.map((d, i) => {
                 const hasSchedule = (p.schedule || []).some(s => s.day === i)
                 return (
-                  <div key={i} className={`rounded-lg py-2 text-center text-xs font-medium ${hasSchedule ? 'bg-[#ff4757] text-white' : 'bg-slate-700 text-slate-500'}`}>
+                  <div key={i} className={`rounded-lg py-2 text-center text-xs font-medium ${hasSchedule ? 'bg-[#a855f7] text-white' : 'bg-slate-700 text-slate-500'}`}>
                     {d}
                   </div>
                 )
@@ -121,7 +121,7 @@ function ProgramEditor({ initial, onSave, onCancel }) {
         <button
           onClick={() => onSave({ ...initial, name, schedule })}
           disabled={!name}
-          className="bg-[#ff4757] hover:bg-[#ff6b6b] disabled:opacity-50 px-4 py-1.5 rounded-xl text-sm"
+          className="bg-[#a855f7] hover:bg-[#c084fc] disabled:opacity-50 px-4 py-1.5 rounded-xl text-sm"
         >
           저장
         </button>
@@ -131,7 +131,7 @@ function ProgramEditor({ initial, onSave, onCancel }) {
         value={name}
         onChange={e => setName(e.target.value)}
         placeholder="프로그램 이름 (예: 3개월 PT 프로그램)"
-        className="w-full bg-slate-800 rounded-xl px-4 py-3 text-lg font-semibold outline-none focus:ring-1 focus:ring-[#ff4757]"
+        className="w-full bg-slate-800 rounded-xl px-4 py-3 text-lg font-semibold outline-none focus:ring-1 focus:ring-[#a855f7]"
       />
 
       <div>
@@ -144,7 +144,7 @@ function ProgramEditor({ initial, onSave, onCancel }) {
                 key={i}
                 onClick={() => toggleDay(i)}
                 className={`rounded-xl py-3 flex flex-col items-center gap-1 transition-colors ${
-                  s ? 'bg-[#ff4757]' : 'bg-slate-700 text-slate-400'
+                  s ? 'bg-[#a855f7]' : 'bg-slate-700 text-slate-400'
                 }`}
               >
                 <span className="text-xs font-medium">{d}</span>
@@ -173,7 +173,7 @@ function ProgramEditor({ initial, onSave, onCancel }) {
 
       {editDay !== null && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-end">
-          <div className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup p-4">
+          <div className="w-full max-w-lg mx-auto bg-[#0d0d12] rounded-t-3xl animate-slideup p-4">
             <p className="font-semibold mb-3">{DAYS[editDay.day]}요일 루틴 선택</p>
             <div className="space-y-1 max-h-64 overflow-y-auto">
               <button

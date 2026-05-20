@@ -68,7 +68,7 @@ export default function Timer() {
               <button
                 key={s}
                 onClick={() => { setTarget(s); start(s) }}
-                className="text-xs px-2 py-1 rounded-lg bg-slate-700 hover:bg-[#ff4757] transition-colors"
+                className="text-xs px-2 py-1 rounded-lg bg-slate-700 hover:bg-[#a855f7] transition-colors"
               >
                 {s}s
               </button>
@@ -78,7 +78,7 @@ export default function Timer() {
             {!running ? (
               <button
                 onClick={() => start()}
-                className="flex-1 py-1.5 rounded-xl bg-[#ff4757] hover:bg-[#ff6b6b] text-sm font-medium transition-colors"
+                className="flex-1 py-1.5 rounded-xl bg-[#a855f7] hover:bg-[#c084fc] text-sm font-medium transition-colors"
               >
                 시작
               </button>
