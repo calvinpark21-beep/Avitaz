@@ -112,7 +112,8 @@ function RoutineEditor({ initial, onSave, onCancel }) {
   }
 
   function updateExercise(idx, field, value) {
-    setExercises(prev => prev.map((e, i) => i === idx ? { ...e, [field]: Number(value) } : e))
+    const isNum = ['sets', 'reps', 'weight'].includes(field)
+    setExercises(prev => prev.map((e, i) => i === idx ? { ...e, [field]: isNum ? Number(value) : value } : e))
   }
 
   function removeExercise(idx) {
@@ -141,12 +142,23 @@ function RoutineEditor({ initial, onSave, onCancel }) {
 
       <div className="space-y-2">
         {exercises.map((ex, idx) => (
-          <div key={idx} className="glass rounded-xl p-3">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium">{ex.name}</p>
-              <button onClick={() => removeExercise(idx)} className="text-xs text-slate-500">삭제</button>
+          <div key={idx} className="glass rounded-2xl p-3 space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <input
+                value={ex.name}
+                onChange={e => updateExercise(idx, 'name', e.target.value)}
+                className="flex-1 bg-transparent text-sm font-semibold outline-none border-b border-white/10 focus:border-violet-500 pb-0.5 transition-colors"
+                placeholder="종목 이름"
+              />
+              <button onClick={() => removeExercise(idx)} className="text-xs text-slate-600 hover:text-red-400 shrink-0">삭제</button>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <input
+              value={ex.note || ''}
+              onChange={e => updateExercise(idx, 'note', e.target.value)}
+              placeholder="메모 (예: 좌우 각 10회, w/밸패)"
+              className="w-full bg-transparent text-xs text-slate-500 outline-none border-b border-white/5 focus:border-violet-500/50 pb-0.5 transition-colors"
+            />
+            <div className="grid grid-cols-3 gap-2 pt-1">
               {[['sets', '세트'], ['reps', '횟수'], ['weight', '무게(kg)']].map(([field, label]) => (
                 <div key={field} className="text-center">
                   <p className="text-xs text-slate-500 mb-1">{label}</p>
