@@ -3,12 +3,15 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { db } from '../db'
 import Timer from '../components/Timer'
 import ExercisePicker from '../components/ExercisePicker'
+import ModalPortal from '../components/ModalPortal'
 
 export default function Workout() {
   const location = useLocation()
   const navigate = useNavigate()
   const [exercises, setExercises] = useState([])
   const [showPicker, setShowPicker] = useState(false)
+  const [showRoutinePicker, setShowRoutinePicker] = useState(false)
+  const [routines, setRoutines] = useState([])
   const [startTime] = useState(Date.now())
   const [elapsed, setElapsed] = useState(0)
   const [saving, setSaving] = useState(false)
@@ -33,6 +36,20 @@ export default function Workout() {
     const t = setInterval(() => setElapsed(Math.floor((Date.now() - startTime) / 1000)), 1000)
     return () => clearInterval(t)
   }, [startTime])
+
+  useEffect(() => {
+    db.routines.toArray().then(r => setRoutines([...r].sort((a, b) => b.id - a.id)))
+  }, [])
+
+  function addRoutine(routine) {
+    const toAdd = (routine.exercises || []).map(e => ({
+      exerciseId: e.exerciseId,
+      name: e.name,
+      sets: Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
+    }))
+    setExercises(prev => [...prev, ...toAdd])
+    setShowRoutinePicker(false)
+  }
 
   function addExercise(ex) {
     setExercises(prev => [
@@ -157,18 +174,66 @@ export default function Workout() {
         ))}
       </div>
 
-      <button
-        onClick={() => setShowPicker(true)}
-        className="w-full py-3 rounded-2xl border-2 border-dashed border-[#333] text-slate-400 hover:border-violet-500 hover:text-violet-400 transition-colors"
-      >
-        + 종목 추가
-      </button>
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          onClick={() => setShowPicker(true)}
+          className="py-3 rounded-2xl text-sm text-slate-400 hover:text-violet-400 transition-colors"
+          style={{ border: '2px dashed rgba(255,255,255,0.12)' }}
+        >
+          + 종목 추가
+        </button>
+        <button
+          onClick={() => setShowRoutinePicker(true)}
+          className="py-3 rounded-2xl text-sm text-slate-400 hover:text-violet-400 transition-colors"
+          style={{ border: '2px dashed rgba(255,255,255,0.12)' }}
+        >
+          + 루틴 추가
+        </button>
+      </div>
 
       {showPicker && (
         <ExercisePicker
           onSelect={addExercise}
           onClose={() => setShowPicker(false)}
         />
+      )}
+
+      {showRoutinePicker && (
+        <ModalPortal>
+          <div className="fixed inset-0 z-[100] flex items-end" style={{ background: 'rgba(0,0,0,0.75)' }} onClick={() => setShowRoutinePicker(false)}>
+            <div className="w-full max-w-lg mx-auto rounded-t-3xl animate-slideup flex flex-col"
+              style={{ maxHeight: '80vh', background: '#0e0e1c', border: '1px solid rgba(255,255,255,0.07)', borderBottom: 'none' }}
+              onClick={e => e.stopPropagation()}>
+              <div className="flex justify-center pt-3 pb-1 shrink-0">
+                <div className="w-10 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.2)' }} />
+              </div>
+              <div className="flex items-center justify-between px-4 py-3 shrink-0">
+                <p className="font-bold">루틴 추가</p>
+                <button onClick={() => setShowRoutinePicker(false)} className="text-slate-500 text-sm">닫기</button>
+              </div>
+              <p className="text-xs text-slate-500 px-4 pb-2 shrink-0">선택한 루틴의 종목이 현재 운동에 추가됩니다</p>
+              <div className="overflow-y-auto flex-1 px-4 pb-8 space-y-2">
+                {routines.length === 0 ? (
+                  <p className="text-center text-slate-500 py-8 text-sm">저장된 루틴이 없습니다</p>
+                ) : (
+                  routines.map(r => (
+                    <button key={r.id}
+                      onClick={() => addRoutine(r)}
+                      className="w-full glass rounded-2xl px-4 py-4 flex items-center justify-between text-left">
+                      <div>
+                        <p className="font-semibold text-sm">{r.name}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {(r.exercises || []).map(e => e.name).join(', ').slice(0, 40)}...
+                        </p>
+                      </div>
+                      <span className="text-violet-400 text-lg ml-2 shrink-0">+</span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
       )}
     </div>
   )
