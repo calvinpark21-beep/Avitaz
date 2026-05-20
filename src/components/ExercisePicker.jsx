@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { db } from '../db'
+import ModalPortal from './ModalPortal'
 
 const CATEGORIES = ['전체', '가슴', '등', '어깨', '하체', '이두', '삼두', '복근', '맨손운동', '스트레칭', 'PT 운동']
 
@@ -43,6 +44,7 @@ export default function ExercisePicker({ onSelect, onClose }) {
   )
 
   return (
+    <ModalPortal>
     <div className="fixed inset-0 z-[100] bg-black/70 flex items-end" onClick={onClose}>
       <div
         className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col"
@@ -124,5 +126,6 @@ export default function ExercisePicker({ onSelect, onClose }) {
         </div>
       </div>
     </div>
+    </ModalPortal>
   )
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { db } from '../db'
+import ModalPortal from '../components/ModalPortal'
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -168,6 +169,7 @@ export default function Home() {
 
       {/* 루틴 선택 모달 */}
       {showPicker && (
+        <ModalPortal>
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-end" onClick={() => setShowPicker(false)}>
           <div
             className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col"
@@ -202,6 +204,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        </ModalPortal>
       )}
     </div>
   )

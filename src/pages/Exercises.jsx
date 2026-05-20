@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { db } from '../db'
+import ModalPortal from '../components/ModalPortal'
 
 const CATEGORIES = ['전체', '가슴', '등', '어깨', '하체', '이두', '삼두', '복근', '맨손운동', '스트레칭', 'PT 운동']
 
@@ -119,6 +120,7 @@ export default function Exercises() {
       </div>
 
       {adding && (
+        <ModalPortal>
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-end">
           <div className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '80vh' }}>
             {/* 헤더 - 항상 보임 */}
@@ -168,6 +170,7 @@ export default function Exercises() {
             </div>
           </div>
         </div>
+        </ModalPortal>
       )}
     </div>
   )

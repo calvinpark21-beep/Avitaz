@@ -4,6 +4,7 @@ import {
   ResponsiveContainer, CartesianGrid, Legend,
 } from 'recharts'
 import { db } from '../db'
+import ModalPortal from '../components/ModalPortal'
 
 const TABS = ['운동그래프', '인바디']
 
@@ -256,6 +257,7 @@ function InbodyTab() {
 
       {/* 입력 모달 */}
       {showForm && (
+        <ModalPortal>
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-end">
           <div className="w-full max-w-lg mx-auto bg-[#111] rounded-t-3xl animate-slideup flex flex-col" style={{ maxHeight: '85vh' }}>
             <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
@@ -300,6 +302,7 @@ function InbodyTab() {
             </div>
           </div>
         </div>
+        </ModalPortal>
       )}
     </div>
   )
