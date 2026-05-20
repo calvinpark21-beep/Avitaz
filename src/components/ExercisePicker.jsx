@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { db } from '../db'
 import ModalPortal from './ModalPortal'
 
-const CATEGORIES = ['전체', '가슴', '등', '어깨', '하체', '이두', '삼두', '복근', '맨손운동', '스트레칭', 'PT 운동']
+const CATEGORIES = ['전체', '가슴', '등', '어깨', '하체', '이두', '삼두', '복근', '맨손운동', '스트레칭', '유산소', 'PT 운동']
 
 export default function ExercisePicker({ onSelect, onClose }) {
   const [allExercises, setAllExercises] = useState([])
