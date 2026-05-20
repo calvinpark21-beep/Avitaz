@@ -161,7 +161,30 @@ const EXERCISES = [
   { name: '하프스쿼트', category: 'PT 운동', note: '1일차' },
 ]
 
-const ROUTINE_SEED_VERSION = 'v1'
+const ROUTINE_SEED_VERSION = 'v2'
+
+const SEED_ROUTINES_V2 = [
+  {
+    name: '루틴3: 스트레칭&코어',
+    exercises: [
+      { name: '옆구리 비틀기', note: '네발자세에서 비틀기', sets: 2, reps: 10, weight: 0 },
+      { name: '비둘기 자세', note: '한쪽 다리 책상다리', sets: 2, reps: 30, weight: 0 },
+      { name: '버드도그', note: '네발자세에서 팔다리 뻗기', sets: 3, reps: 10, weight: 0 },
+      { name: '다운도그', sets: 3, reps: 10, weight: 0 },
+    ],
+  },
+  {
+    name: '루틴4: T밸런스',
+    exercises: [
+      { name: 'T밸런스 접었다폈다', sets: 3, reps: 10, weight: 0 },
+      { name: '원레그 카프레이즈', note: 'w/밸패', sets: 3, reps: 10, weight: 0 },
+      { name: '원레그 데드리프트', note: 'w/밸패&스텝박스', sets: 3, reps: 10, weight: 0 },
+      { name: '원레그 서클', note: 'w/밸패&짐볼', sets: 3, reps: 10, weight: 0 },
+      { name: 'Y레이즈 (서서)', note: '테라밴드', sets: 3, reps: 10, weight: 0 },
+      { name: 'Y레이즈 (허리숙여서)', note: '맨손', sets: 3, reps: 10, weight: 0 },
+    ],
+  },
+]
 
 const SEED_ROUTINES = [
   {
@@ -196,18 +219,26 @@ export async function seedRoutines() {
   if (savedVersion === ROUTINE_SEED_VERSION) return
 
   const existing = await db.routines.toArray()
-  if (existing.length > 0) {
-    localStorage.setItem('routineSeedVersion', ROUTINE_SEED_VERSION)
-    return
+
+  // 최초 설치: 루틴 없을 때만 루틴1, 2 추가
+  if (existing.length === 0) {
+    for (const r of SEED_ROUTINES) {
+      await db.routines.add({
+        ...r,
+        exercises: r.exercises.map(e => ({ ...e, exerciseId: 0 })),
+      })
+    }
   }
 
-  localStorage.setItem('routineSeedVersion', ROUTINE_SEED_VERSION)
-  for (const r of SEED_ROUTINES) {
+  // v2: 루틴3, 4 추가 (항상)
+  for (const r of SEED_ROUTINES_V2) {
     await db.routines.add({
       ...r,
       exercises: r.exercises.map(e => ({ ...e, exerciseId: 0 })),
     })
   }
+
+  localStorage.setItem('routineSeedVersion', ROUTINE_SEED_VERSION)
 }
 
 export async function seedExercises() {
