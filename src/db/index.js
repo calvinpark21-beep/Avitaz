@@ -17,7 +17,7 @@ db.version(2).stores({
   inbodyLogs: '++id, date',
 })
 
-const SEED_VERSION = 'v9'
+const SEED_VERSION = 'v10'
 
 const EXERCISES = [
   // 가슴
@@ -88,7 +88,17 @@ const EXERCISES = [
   { name: '어깨 회전', category: '스트레칭' },
   { name: '전신 스트레칭', category: '스트레칭' },
   { name: '광배근 스트레칭', category: '스트레칭' },
-  // PT 운동 (5/13 — 최신)
+  // PT 운동 (5/20 — 최신)
+  { name: '옆구리 비틀기', category: 'PT 운동', note: '5/20 · 네발자세에서 비틀기' },
+  { name: '비둘기 자세', category: 'PT 운동', note: '5/20 · 한쪽 다리 책상다리' },
+  { name: '버드도그', category: 'PT 운동', note: '5/20 · 네발자세에서 팔다리 뻗기' },
+  { name: '다운도그', category: 'PT 운동', note: '5/20' },
+  { name: 'T밸런스 접었다폈다', category: 'PT 운동', note: '5/20' },
+  { name: '원레그 카프레이즈', category: 'PT 운동', note: '5/20 · w/밸패' },
+  { name: '원레그 서클', category: 'PT 운동', note: '5/20 · w/밸패&짐볼' },
+  { name: 'Y레이즈 (서서)', category: 'PT 운동', note: '5/20 · 테라밴드' },
+  { name: 'Y레이즈 (허리숙여서)', category: 'PT 운동', note: '5/20 · 맨손' },
+  // PT 운동 (5/13)
   { name: 'T밸런스 허리숙였다 올라오기', category: 'PT 운동', note: '5/13' },
   { name: '스텝박스 런지 무릎올리기', category: 'PT 운동', note: '5/13' },
   { name: '코펜하겐 플랭크', category: 'PT 운동', note: '5/13' },
