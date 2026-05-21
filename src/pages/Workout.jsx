@@ -110,7 +110,8 @@ export default function Workout() {
       name: ex.name,
       sets: ex.sets.filter(s => s.done),
     }))
-    const existing = await db.workoutLogs.where('date').equals(todayStr).first()
+    const allLogs = await db.workoutLogs.toArray()
+    const existing = allLogs.find(l => l.date === todayStr)
     if (existing) {
       await db.workoutLogs.put({
         ...existing,
