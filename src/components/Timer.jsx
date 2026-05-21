@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 
 const PRESETS = [60, 90, 120, 180]
 
-export default function Timer() {
+export default function Timer({ elapsed = 0 }) {
   const [seconds, setSeconds] = useState(0)
   const [target, setTarget] = useState(90)
   const [running, setRunning] = useState(false)
@@ -42,7 +42,10 @@ export default function Timer() {
 
   return (
     <div className="glass rounded-2xl p-4">
-      <p className="text-xs text-slate-400 mb-3">휴식 타이머</p>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs text-slate-400">휴식 타이머</p>
+        <p className="text-xs font-semibold text-violet-400">⏱ {fmt(elapsed)} 운동 중</p>
+      </div>
       <div className="flex items-center gap-4">
         <div className="relative w-20 h-20 shrink-0">
           <svg className="w-20 h-20 -rotate-90" viewBox="0 0 88 88">

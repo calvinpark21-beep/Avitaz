@@ -142,7 +142,7 @@ export default function Workout() {
         </button>
       </div>
 
-      <Timer />
+      <Timer elapsed={elapsed} />
 
       <div className="space-y-3">
         {exercises.map((ex, exIdx) => (

@@ -31,7 +31,9 @@ export default function Home() {
       ids: dayLogs.map(l => l.id),
       date: selectedDate,
       duration: dayLogs.reduce((sum, l) => sum + (l.duration || 0), 0),
-      exercises: dayLogs.flatMap(l => l.exercises || []),
+      exercises: dayLogs.flatMap(l =>
+        (l.exercises || []).map((ex, exIdx) => ({ ...ex, _logId: l.id, _exIdx: exIdx }))
+      ),
     }
     setSelectedLog(merged)
   }, [selectedDate, logs])
@@ -47,6 +49,18 @@ export default function Home() {
     if (!selectedLog?.ids) return
     await db.workoutLogs.bulkDelete(selectedLog.ids)
     setSelectedLog(null)
+    loadMonth()
+  }
+
+  async function deleteExercise(ex) {
+    const log = await db.workoutLogs.get(ex._logId)
+    if (!log) { loadMonth(); return }
+    const remaining = (log.exercises || []).filter((_, i) => i !== ex._exIdx)
+    if (remaining.length === 0) {
+      await db.workoutLogs.delete(log.id)
+    } else {
+      await db.workoutLogs.put({ ...log, exercises: remaining })
+    }
     loadMonth()
   }
 
@@ -151,7 +165,10 @@ export default function Home() {
               )}
               {(selectedLog.exercises || []).map((ex, i) => (
                 <div key={i} className="glass rounded-2xl px-4 py-3">
-                  <p className="text-sm font-semibold text-grad mb-2">{ex.name}</p>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm font-semibold text-grad">{ex.name}</p>
+                    <button onClick={() => deleteExercise(ex)} className="text-xs text-slate-600 hover:text-rose-400 transition-colors">삭제</button>
+                  </div>
                   <div className="flex flex-wrap gap-1.5">
                     {(ex.sets || []).map((s, j) => (
                       <span key={j} className="text-xs px-2.5 py-1 rounded-lg text-slate-300" style={{ background: 'rgba(255,255,255,0.07)' }}>
