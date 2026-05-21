@@ -153,6 +153,18 @@ export default function Home() {
                   </div>
                 </div>
               ))}
+              {selectedDate === todayStr && (
+                <div className="grid grid-cols-2 gap-2">
+                  <button onClick={() => setShowPicker(true)}
+                    className="w-full btn-grad rounded-2xl py-3 font-bold text-sm text-white">
+                    + 루틴 추가
+                  </button>
+                  <button onClick={() => navigate('/workout')}
+                    className="w-full glass rounded-2xl py-3 text-sm text-slate-300 font-medium">
+                    + 운동 추가
+                  </button>
+                </div>
+              )}
               <button onClick={() => deleteLog(selectedLog.id)}
                 className="w-full py-2.5 rounded-xl text-xs text-slate-500 transition-colors hover:text-rose-400"
                 style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
