@@ -25,8 +25,15 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    const log = logs.find(l => l.date === selectedDate) ?? null
-    setSelectedLog(log)
+    const dayLogs = logs.filter(l => l.date === selectedDate)
+    if (dayLogs.length === 0) { setSelectedLog(null); return }
+    const merged = {
+      ids: dayLogs.map(l => l.id),
+      date: selectedDate,
+      duration: dayLogs.reduce((sum, l) => sum + (l.duration || 0), 0),
+      exercises: dayLogs.flatMap(l => l.exercises || []),
+    }
+    setSelectedLog(merged)
   }, [selectedDate, logs])
 
   async function loadMonth() {
@@ -36,8 +43,9 @@ export default function Home() {
     setLogs(data)
   }
 
-  async function deleteLog(id) {
-    await db.workoutLogs.delete(id)
+  async function deleteLog() {
+    if (!selectedLog?.ids) return
+    await db.workoutLogs.bulkDelete(selectedLog.ids)
     setSelectedLog(null)
     loadMonth()
   }
@@ -165,7 +173,7 @@ export default function Home() {
                   </button>
                 </div>
               )}
-              <button onClick={() => deleteLog(selectedLog.id)}
+              <button onClick={deleteLog}
                 className="w-full py-2.5 rounded-xl text-xs text-slate-500 transition-colors hover:text-rose-400"
                 style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
                 기록 삭제
