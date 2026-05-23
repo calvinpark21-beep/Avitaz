@@ -61,11 +61,12 @@ function ReportTab() {
     return WEEKDAYS.map((day, i) => {
       const d = new Date(start)
       d.setDate(start.getDate() + i)
-      const dateStr = d.toISOString().slice(0, 10)
+      const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
       const mins = Math.round(
         logs.filter(l => l.date === dateStr).reduce((s, l) => s + (l.duration || 0), 0) / 60
       )
-      const isToday = dateStr === today.toISOString().slice(0, 10)
+      const todayLocal = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`
+      const isToday = dateStr === todayLocal
       return { day, mins, isToday }
     })
   }
@@ -178,7 +179,7 @@ const INBODY_FIELDS = [
 function InbodyTab() {
   const [logs, setLogs] = useState([])
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ date: new Date().toISOString().slice(0, 10), weight: '', muscle: '', fat: '', fatPct: '', bmi: '' })
+  const [form, setForm] = useState({ date: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` })(), weight: '', muscle: '', fat: '', fatPct: '', bmi: '' })
   const [graphField, setGraphField] = useState('weight')
 
   useEffect(() => { loadLogs() }, [])
@@ -196,7 +197,7 @@ function InbodyTab() {
     })
     await db.inbodyLogs.add(entry)
     setShowForm(false)
-    setForm({ date: new Date().toISOString().slice(0, 10), weight: '', muscle: '', fat: '', fatPct: '', bmi: '' })
+    setForm({ date: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` })(), weight: '', muscle: '', fat: '', fatPct: '', bmi: '' })
     loadLogs()
   }
 
