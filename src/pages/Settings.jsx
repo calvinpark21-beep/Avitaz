@@ -24,6 +24,43 @@ export default function Settings() {
     setTimeout(() => setSaved(false), 1500)
   }
 
+  async function exportData() {
+    const [workoutLogs, inbodyLogs, routines] = await Promise.all([
+      db.workoutLogs.toArray(),
+      db.inbodyLogs.toArray(),
+      db.routines.toArray(),
+    ])
+    const payload = { version: 1, exportedAt: new Date().toISOString(), workoutLogs, inbodyLogs, routines }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `avitaz-backup-${new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','')}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  async function importData(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    try {
+      const text = await file.text()
+      const data = JSON.parse(text)
+      if (!data.workoutLogs || !data.inbodyLogs) throw new Error('잘못된 파일')
+      if (!window.confirm(`백업 파일을 불러옵니다.\n운동기록 ${data.workoutLogs.length}개, 인바디 ${data.inbodyLogs.length}개, 루틴 ${(data.routines||[]).length}개\n\n기존 데이터는 유지되고 백업 데이터가 추가됩니다.`)) return
+      const wLogs = data.workoutLogs.map(({ id: _, ...r }) => r)
+      const iLogs = data.inbodyLogs.map(({ id: _, ...r }) => r)
+      const rLogs = (data.routines || []).map(({ id: _, ...r }) => r)
+      await db.workoutLogs.bulkAdd(wLogs)
+      await db.inbodyLogs.bulkAdd(iLogs)
+      if (rLogs.length) await db.routines.bulkAdd(rLogs)
+      window.location.reload()
+    } catch {
+      alert('파일을 읽을 수 없습니다. 올바른 백업 파일인지 확인해주세요.')
+    }
+    e.target.value = ''
+  }
+
   async function clearAllData() {
     if (!window.confirm('모든 데이터를 삭제합니다. 되돌릴 수 없습니다.')) return
     await Promise.all([
@@ -131,6 +168,22 @@ export default function Settings() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>
+      </div>
+
+      {/* 백업 / 복원 */}
+      <div className="glass rounded-2xl p-4 space-y-2 animate-fadein">
+        <p className="text-sm font-semibold text-slate-300">백업 · 복원</p>
+        <p className="text-xs text-slate-500">운동기록, 인바디, 루틴을 JSON 파일로 내보내거나 불러옵니다.</p>
+        <button
+          onClick={exportData}
+          className="w-full py-2.5 rounded-xl text-sm font-medium btn-grad text-white"
+        >
+          백업 내보내기
+        </button>
+        <label className="w-full py-2.5 rounded-xl text-sm font-medium glass text-slate-300 flex items-center justify-center cursor-pointer" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+          백업 불러오기
+          <input type="file" accept=".json" className="hidden" onChange={importData} />
+        </label>
       </div>
 
       {/* 데이터 관리 */}
