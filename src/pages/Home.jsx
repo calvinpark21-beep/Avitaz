@@ -17,6 +17,8 @@ export default function Home() {
   const [selectedLog, setSelectedLog] = useState(null)
   const [routines, setRoutines] = useState([])
   const [showPicker, setShowPicker] = useState(false)
+  const [editingEx, setEditingEx] = useState(null) // { ex, sets }
+
 
   useEffect(() => { loadMonth() }, [year, month])
 
@@ -62,6 +64,48 @@ export default function Home() {
       await db.workoutLogs.put({ ...log, exercises: remaining })
     }
     loadMonth()
+  }
+
+  function openEdit(ex) {
+    setEditingEx({ ex, sets: ex.sets.map(s => ({ ...s })) })
+  }
+
+  async function saveEdit() {
+    const { ex, sets } = editingEx
+    const validSets = sets.filter(s =>
+      'duration' in s ? (s.duration !== '' && s.distance !== '') : (s.weight !== '' && s.reps !== '')
+    )
+    if (validSets.length === 0) { setEditingEx(null); return }
+    const log = await db.workoutLogs.get(ex._logId)
+    if (!log) { loadMonth(); setEditingEx(null); return }
+    const newExercises = (log.exercises || []).map((e, i) =>
+      i === ex._exIdx ? { ...e, sets: validSets } : e
+    )
+    await db.workoutLogs.put({ ...log, exercises: newExercises })
+    setEditingEx(null)
+    loadMonth()
+  }
+
+  function updateEditSet(idx, field, value) {
+    setEditingEx(prev => {
+      const sets = prev.sets.map((s, i) => i === idx ? { ...s, [field]: value } : s)
+      return { ...prev, sets }
+    })
+  }
+
+  function addEditSet() {
+    setEditingEx(prev => {
+      const isCardio = prev.sets.length > 0 && 'duration' in prev.sets[0]
+      const newSet = isCardio ? { duration: '', distance: '' } : { weight: '', reps: '' }
+      return { ...prev, sets: [...prev.sets, newSet] }
+    })
+  }
+
+  function removeEditSet(idx) {
+    setEditingEx(prev => ({
+      ...prev,
+      sets: prev.sets.filter((_, i) => i !== idx)
+    }))
   }
 
   function prevMonth() {
@@ -167,7 +211,10 @@ export default function Home() {
                 <div key={i} className="glass rounded-2xl px-4 py-3">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-grad">{ex.name}</p>
-                    <button onClick={() => deleteExercise(ex)} className="text-xs text-slate-600 hover:text-rose-400 transition-colors">삭제</button>
+                    <div className="flex items-center gap-3">
+                      <button onClick={() => openEdit(ex)} className="text-xs text-slate-500 hover:text-violet-400 transition-colors">수정</button>
+                      <button onClick={() => deleteExercise(ex)} className="text-xs text-slate-600 hover:text-rose-400 transition-colors">삭제</button>
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {(ex.sets || []).map((s, j) => (
@@ -210,6 +257,68 @@ export default function Home() {
             </div>
           )}
         </div>
+      )}
+
+      {/* 운동 수정 모달 */}
+      {editingEx && (
+        <ModalPortal>
+          <div className="fixed inset-0 z-[100] flex items-end" style={{ background: 'rgba(0,0,0,0.75)' }} onClick={() => setEditingEx(null)}>
+            <div className="w-full max-w-lg mx-auto rounded-t-3xl animate-slideup flex flex-col"
+              style={{ maxHeight: '80vh', background: '#0e0e1c', border: '1px solid rgba(255,255,255,0.07)', borderBottom: 'none' }}
+              onClick={e => e.stopPropagation()}>
+              <div className="flex justify-center pt-3 pb-1 shrink-0">
+                <div className="w-10 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.2)' }} />
+              </div>
+              <div className="flex items-center justify-between px-4 py-3 shrink-0">
+                <p className="font-bold text-base text-grad">{editingEx.ex.name}</p>
+                <button onClick={() => setEditingEx(null)} className="text-slate-500 text-sm">취소</button>
+              </div>
+              <div className="overflow-y-auto flex-1 px-4 pb-4 space-y-2">
+                {editingEx.sets.map((s, idx) => {
+                  const isCardio = 'duration' in s
+                  return (
+                    <div key={idx} className="flex items-center gap-2 glass rounded-2xl px-3 py-2.5">
+                      <span className="text-xs text-slate-500 w-6 text-center shrink-0">{idx + 1}</span>
+                      {isCardio ? (
+                        <>
+                          <input type="number" value={s.duration} onChange={e => updateEditSet(idx, 'duration', e.target.value)}
+                            placeholder="분" className="flex-1 bg-transparent text-center text-sm text-white outline-none border-b border-slate-700 py-0.5" style={{ minWidth: 0 }} />
+                          <span className="text-slate-600 text-xs">분</span>
+                          <input type="number" value={s.distance} onChange={e => updateEditSet(idx, 'distance', e.target.value)}
+                            placeholder="km" className="flex-1 bg-transparent text-center text-sm text-white outline-none border-b border-slate-700 py-0.5" style={{ minWidth: 0 }} />
+                          <span className="text-slate-600 text-xs">km</span>
+                        </>
+                      ) : (
+                        <>
+                          <input type="number" value={s.weight} onChange={e => updateEditSet(idx, 'weight', e.target.value)}
+                            placeholder="kg" className="flex-1 bg-transparent text-center text-sm text-white outline-none border-b border-slate-700 py-0.5" style={{ minWidth: 0 }} />
+                          <span className="text-slate-600 text-xs">kg</span>
+                          <span className="text-slate-700 text-xs">×</span>
+                          <input type="number" value={s.reps} onChange={e => updateEditSet(idx, 'reps', e.target.value)}
+                            placeholder="회" className="flex-1 bg-transparent text-center text-sm text-white outline-none border-b border-slate-700 py-0.5" style={{ minWidth: 0 }} />
+                          <span className="text-slate-600 text-xs">회</span>
+                        </>
+                      )}
+                      <button onClick={() => removeEditSet(idx)} className="text-slate-600 hover:text-rose-400 transition-colors text-base leading-none px-1">−</button>
+                    </div>
+                  )
+                })}
+                <button onClick={addEditSet}
+                  className="w-full py-2.5 rounded-2xl text-sm text-slate-400 hover:text-violet-400 transition-colors"
+                  style={{ border: '1px dashed rgba(255,255,255,0.1)' }}>
+                  + 세트 추가
+                </button>
+              </div>
+              <div className="px-4 pb-8 pt-2 shrink-0">
+                <button onClick={saveEdit}
+                  className="w-full btn-grad rounded-2xl py-3.5 font-bold text-sm text-white"
+                  style={{ boxShadow: '0 4px 20px rgba(124,58,237,0.4)' }}>
+                  저장
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
       )}
 
       {/* 루틴 선택 모달 */}
