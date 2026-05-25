@@ -72,9 +72,12 @@ export default function Home() {
 
   async function saveEdit() {
     const { ex, sets } = editingEx
-    const validSets = sets.filter(s =>
-      'duration' in s ? (s.duration !== '' && s.distance !== '') : (s.weight !== '' && s.reps !== '')
-    )
+    const validSets = sets
+      .filter(s => 'duration' in s ? (s.duration !== '' && s.distance !== '') : (s.weight !== '' && s.reps !== ''))
+      .map(s => 'duration' in s
+        ? { duration: parseFloat(s.duration) || 0, distance: parseFloat(s.distance) || 0 }
+        : { weight: parseFloat(s.weight) || 0, reps: parseFloat(s.reps) || 0 }
+      )
     if (validSets.length === 0) { setEditingEx(null); return }
     const log = await db.workoutLogs.get(ex._logId)
     if (!log) { loadMonth(); setEditingEx(null); return }
@@ -281,20 +284,20 @@ export default function Home() {
                       <span className="text-xs text-slate-500 w-6 text-center shrink-0">{idx + 1}</span>
                       {isCardio ? (
                         <>
-                          <input type="number" value={s.duration} onChange={e => updateEditSet(idx, 'duration', e.target.value)}
+                          <input type="text" inputMode="decimal" value={s.duration} onChange={e => updateEditSet(idx, 'duration', e.target.value)}
                             placeholder="분" className="flex-1 bg-transparent text-center text-sm text-white outline-none border-b border-slate-700 py-0.5" style={{ minWidth: 0 }} />
                           <span className="text-slate-600 text-xs">분</span>
-                          <input type="number" value={s.distance} onChange={e => updateEditSet(idx, 'distance', e.target.value)}
+                          <input type="text" inputMode="decimal" value={s.distance} onChange={e => updateEditSet(idx, 'distance', e.target.value)}
                             placeholder="km" className="flex-1 bg-transparent text-center text-sm text-white outline-none border-b border-slate-700 py-0.5" style={{ minWidth: 0 }} />
                           <span className="text-slate-600 text-xs">km</span>
                         </>
                       ) : (
                         <>
-                          <input type="number" value={s.weight} onChange={e => updateEditSet(idx, 'weight', e.target.value)}
+                          <input type="text" inputMode="decimal" value={s.weight} onChange={e => updateEditSet(idx, 'weight', e.target.value)}
                             placeholder="kg" className="flex-1 bg-transparent text-center text-sm text-white outline-none border-b border-slate-700 py-0.5" style={{ minWidth: 0 }} />
                           <span className="text-slate-600 text-xs">kg</span>
                           <span className="text-slate-700 text-xs">×</span>
-                          <input type="number" value={s.reps} onChange={e => updateEditSet(idx, 'reps', e.target.value)}
+                          <input type="text" inputMode="numeric" value={s.reps} onChange={e => updateEditSet(idx, 'reps', e.target.value)}
                             placeholder="회" className="flex-1 bg-transparent text-center text-sm text-white outline-none border-b border-slate-700 py-0.5" style={{ minWidth: 0 }} />
                           <span className="text-slate-600 text-xs">회</span>
                         </>

@@ -109,7 +109,10 @@ export default function Workout() {
     const newExercises = exercises.map(ex => ({
       exerciseId: ex.exerciseId,
       name: ex.name,
-      sets: ex.sets.filter(s => s.done),
+      sets: ex.sets.filter(s => s.done).map(s => {
+        if ('duration' in s) return { duration: parseFloat(s.duration) || 0, distance: parseFloat(s.distance) || 0 }
+        return { weight: parseFloat(s.weight) || 0, reps: parseFloat(s.reps) || 0 }
+      }),
     }))
     const allLogs = await db.workoutLogs.toArray()
     const existing = allLogs.find(l => l.date === todayStr)
@@ -171,15 +174,15 @@ export default function Workout() {
                         inputMode="decimal"
                         value={isCardio ? s.duration : s.weight}
                         onFocus={e => e.target.select()}
-                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'duration' : 'weight', Number(e.target.value) || 0)}
+                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'duration' : 'weight', e.target.value)}
                         className="col-span-5 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
                       />
                       <input
                         type="text"
-                        inputMode={isCardio ? 'decimal' : 'numeric'}
+                        inputMode="decimal"
                         value={isCardio ? s.distance : s.reps}
                         onFocus={e => e.target.select()}
-                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'distance' : 'reps', Number(e.target.value) || 0)}
+                        onChange={e => updateSet(exIdx, setIdx, isCardio ? 'distance' : 'reps', e.target.value)}
                         className="col-span-4 glass-input rounded-lg text-center text-sm py-1.5 w-full outline-none focus:ring-1 focus:ring-violet-500"
                       />
                       <button
