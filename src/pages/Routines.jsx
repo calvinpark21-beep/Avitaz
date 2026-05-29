@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { db } from '../db'
-import ExercisePicker from '../components/ExercisePicker'
 
 export default function Routines() {
   const [routines, setRoutines] = useState([])
@@ -104,19 +103,48 @@ export default function Routines() {
 function RoutineEditor({ initial, onSave, onCancel }) {
   const [name, setName] = useState(initial.name)
   const [exercises, setExercises] = useState(initial.exercises || [])
-  const [showPicker, setShowPicker] = useState(false)
+  const [allExercises, setAllExercises] = useState([])
+  const [focusedIdx, setFocusedIdx] = useState(null)
+  const inputRefs = useRef([])
+  const lastAddedRef = useRef(null)
 
-  function addExercise(ex) {
+  useEffect(() => { db.exercises.toArray().then(setAllExercises) }, [])
+
+  useEffect(() => {
+    if (lastAddedRef.current !== null) {
+      const idx = lastAddedRef.current
+      lastAddedRef.current = null
+      requestAnimationFrame(() => inputRefs.current[idx]?.focus())
+    }
+  }, [exercises])
+
+  function addBlankExercise() {
+    setExercises(prev => {
+      lastAddedRef.current = prev.length
+      return [...prev, { exerciseId: 0, name: '', sets: 3, reps: 10, weight: 0 }]
+    })
+  }
+
+  function fillFromSuggestion(idx, ex) {
     const isCardio = ex.type === 'cardio'
-    setExercises(prev => [...prev, isCardio
-      ? { exerciseId: ex.id, name: ex.name, type: 'cardio', sets: 1, duration: 30, distance: 0 }
-      : { exerciseId: ex.id, name: ex.name, sets: 3, reps: 10, weight: 0 }
-    ])
-    setShowPicker(false)
+    setExercises(prev => prev.map((e, i) => i === idx
+      ? isCardio
+        ? { exerciseId: ex.id, name: ex.name, type: 'cardio', sets: 1, duration: 30, distance: 0 }
+        : { exerciseId: ex.id, name: ex.name, sets: 3, reps: 10, weight: 0 }
+      : e
+    ))
+    setFocusedIdx(null)
+  }
+
+  function getSuggestions(idx) {
+    if (focusedIdx !== idx) return []
+    const q = (exercises[idx]?.name || '').trim()
+    if (!q) return allExercises.slice(0, 6)
+    return allExercises.filter(e => e.name.includes(q)).slice(0, 6)
   }
 
   function updateExercise(idx, field, value) {
-    const isNum = ['sets', 'reps', 'weight'].includes(field)
+    const isNum = ['sets', 'reps', 'weight', 'duration', 'distance'].includes(field)
     setExercises(prev => prev.map((e, i) => i === idx ? { ...e, [field]: isNum ? Number(value) : value } : e))
   }
 
@@ -148,12 +176,31 @@ function RoutineEditor({ initial, onSave, onCancel }) {
         {exercises.map((ex, idx) => (
           <div key={idx} className="glass rounded-2xl p-3 space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <input
-                value={ex.name}
-                onChange={e => updateExercise(idx, 'name', e.target.value)}
-                className="flex-1 bg-transparent text-sm font-semibold outline-none border-b border-white/10 focus:border-violet-500 pb-0.5 transition-colors"
-                placeholder="종목 이름"
-              />
+              <div className="relative flex-1">
+                <input
+                  ref={el => inputRefs.current[idx] = el}
+                  value={ex.name}
+                  onChange={e => updateExercise(idx, 'name', e.target.value)}
+                  onFocus={() => setFocusedIdx(idx)}
+                  onBlur={() => setTimeout(() => setFocusedIdx(prev => prev === idx ? null : prev), 200)}
+                  className="w-full bg-transparent text-sm font-semibold outline-none border-b border-white/10 focus:border-violet-500 pb-0.5 transition-colors"
+                  placeholder="종목 이름 입력..."
+                />
+                {getSuggestions(idx).length > 0 && (
+                  <div className="absolute left-0 right-0 top-full z-20 mt-1 bg-[#222] rounded-xl overflow-hidden shadow-xl border border-white/10">
+                    {getSuggestions(idx).map(s => (
+                      <button
+                        key={s.id}
+                        onMouseDown={() => fillFromSuggestion(idx, s)}
+                        className="w-full flex items-center justify-between px-3 py-2.5 text-left hover:bg-white/5 active:bg-white/10 transition-colors"
+                      >
+                        <span className="text-sm">{s.name}</span>
+                        <span className="text-xs text-slate-500 ml-2 shrink-0">{s.category}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <button onClick={() => removeExercise(idx)} className="text-xs text-slate-600 hover:text-red-400 shrink-0">삭제</button>
             </div>
             <input
@@ -185,18 +232,11 @@ function RoutineEditor({ initial, onSave, onCancel }) {
       </div>
 
       <button
-        onClick={() => setShowPicker(true)}
+        onClick={addBlankExercise}
         className="w-full py-3 rounded-2xl border-2 border-dashed border-[#333] text-slate-400 hover:border-violet-500 hover:text-violet-400 transition-colors"
       >
         + 종목 추가
       </button>
-
-      {showPicker && (
-        <ExercisePicker
-          onSelect={addExercise}
-          onClose={() => setShowPicker(false)}
-        />
-      )}
     </div>
   )
 }

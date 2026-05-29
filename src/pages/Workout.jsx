@@ -8,11 +8,26 @@ import ModalPortal from '../components/ModalPortal'
 export default function Workout() {
   const location = useLocation()
   const navigate = useNavigate()
-  const [exercises, setExercises] = useState([])
+  const [exercises, setExercises] = useState(() => {
+    if (location.state?.routineId) return []
+    const saved = sessionStorage.getItem('wk_exercises')
+    return saved ? JSON.parse(saved) : []
+  })
   const [showPicker, setShowPicker] = useState(false)
   const [showRoutinePicker, setShowRoutinePicker] = useState(false)
   const [routines, setRoutines] = useState([])
-  const [startTime] = useState(Date.now())
+  const [startTime] = useState(() => {
+    if (location.state?.routineId) {
+      const t = Date.now()
+      sessionStorage.setItem('wk_start', String(t))
+      return t
+    }
+    const saved = sessionStorage.getItem('wk_start')
+    if (saved) return parseInt(saved, 10)
+    const t = Date.now()
+    sessionStorage.setItem('wk_start', String(t))
+    return t
+  })
   const [elapsed, setElapsed] = useState(0)
   const [saving, setSaving] = useState(false)
 
@@ -21,19 +36,23 @@ export default function Workout() {
     if (routineId) {
       db.routines.get(routineId).then(r => {
         if (!r) return
-        setExercises(
-          (r.exercises || []).map(e => ({
-            exerciseId: e.exerciseId,
-            name: e.name,
-            type: e.type,
-            sets: e.type === 'cardio'
-              ? Array.from({ length: e.sets || 1 }, () => ({ duration: e.duration || 30, distance: e.distance || 0, done: false }))
-              : Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
-          }))
-        )
+        const loaded = (r.exercises || []).map(e => ({
+          exerciseId: e.exerciseId,
+          name: e.name,
+          type: e.type,
+          sets: e.type === 'cardio'
+            ? Array.from({ length: e.sets || 1 }, () => ({ duration: e.duration || 30, distance: e.distance || 0, done: false }))
+            : Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
+        }))
+        setExercises(loaded)
+        sessionStorage.setItem('wk_exercises', JSON.stringify(loaded))
       })
     }
   }, [location.state])
+
+  useEffect(() => {
+    sessionStorage.setItem('wk_exercises', JSON.stringify(exercises))
+  }, [exercises])
 
   useEffect(() => {
     const t = setInterval(() => setElapsed(Math.floor((Date.now() - startTime) / 1000)), 1000)
@@ -102,6 +121,8 @@ export default function Workout() {
   }
 
   async function finish() {
+    sessionStorage.removeItem('wk_start')
+    sessionStorage.removeItem('wk_exercises')
     if (exercises.length === 0) { navigate('/'); return }
     setSaving(true)
     const now = new Date()

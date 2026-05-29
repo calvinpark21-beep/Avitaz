@@ -17,7 +17,7 @@ db.version(2).stores({
   inbodyLogs: '++id, date',
 })
 
-const SEED_VERSION = 'v12'
+const SEED_VERSION = 'v13'
 
 const EXERCISES = [
   // 가슴
@@ -48,6 +48,8 @@ const EXERCISES = [
   { name: '루마니안 데드리프트', category: '하체' },
   { name: '힙 어브덕션', category: '하체' },
   { name: '카프 레이즈', category: '하체' },
+  { name: '워킹런지', category: '하체' },
+  { name: '사이드런지', category: '하체' },
   // 이두
   { name: '바벨 컬', category: '이두' },
   { name: '덤벨 컬', category: '이두' },
@@ -91,6 +93,8 @@ const EXERCISES = [
   // 유산소
   { name: '걷기', category: '유산소', type: 'cardio' },
   { name: '슬로우러닝', category: '유산소', type: 'cardio' },
+  // PT 운동 (등·요가)
+  { name: '부장가아사나', category: 'PT 운동', note: '베이비코브라자세' },
   // PT 운동 (5/20 — 최신)
   { name: '옆구리 비틀기', category: 'PT 운동', note: '5/20 · 네발자세에서 비틀기' },
   { name: '비둘기 자세', category: 'PT 운동', note: '5/20 · 한쪽 다리 책상다리' },
@@ -174,7 +178,26 @@ const EXERCISES = [
   { name: '하프스쿼트', category: 'PT 운동', note: '1일차' },
 ]
 
-const ROUTINE_SEED_VERSION = 'v3'
+const ROUTINE_SEED_VERSION = 'v4'
+
+const SEED_ROUTINES_V4 = [
+  {
+    name: '루틴8: 하체',
+    exercises: [
+      { name: '스쿼트', note: '바벨 30~40kg', sets: 3, reps: 10, weight: 35 },
+      { name: '딥스쿼트', sets: 3, reps: 10, weight: 0 },
+      { name: '워킹런지', note: 'w/8kg', sets: 3, reps: 10, weight: 8 },
+      { name: '사이드런지', note: 'w/글라이더', sets: 3, reps: 10, weight: 0 },
+    ],
+  },
+  {
+    name: '루틴9: 등&요가',
+    exercises: [
+      { name: '폼롤러 스완', note: 'w/폼롤러', sets: 3, reps: 10, weight: 0 },
+      { name: '부장가아사나', note: '베이비코브라자세', sets: 3, reps: 10, weight: 0 },
+    ],
+  },
+]
 
 const SEED_ROUTINES_V3 = [
   {
@@ -280,8 +303,17 @@ export async function seedRoutines() {
   }
 
   // v3: 루틴5, 6, 7
-  for (const r of SEED_ROUTINES_V3) {
-    await db.routines.add({ ...r, exercises: r.exercises.map(e => ({ ...e, exerciseId: 0 })) })
+  if (!savedVersion || savedVersion < 'v3') {
+    for (const r of SEED_ROUTINES_V3) {
+      await db.routines.add({ ...r, exercises: r.exercises.map(e => ({ ...e, exerciseId: 0 })) })
+    }
+  }
+
+  // v4: 루틴8, 9
+  if (!savedVersion || savedVersion < 'v4') {
+    for (const r of SEED_ROUTINES_V4) {
+      await db.routines.add({ ...r, exercises: r.exercises.map(e => ({ ...e, exerciseId: 0 })) })
+    }
   }
 
   localStorage.setItem('routineSeedVersion', ROUTINE_SEED_VERSION)
