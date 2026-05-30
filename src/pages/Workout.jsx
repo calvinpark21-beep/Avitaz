@@ -9,23 +9,17 @@ export default function Workout() {
   const location = useLocation()
   const navigate = useNavigate()
   const [exercises, setExercises] = useState(() => {
-    if (location.state?.routineId) return []
-    const saved = sessionStorage.getItem('wk_exercises')
+    const saved = localStorage.getItem('wk_exercises')
     return saved ? JSON.parse(saved) : []
   })
   const [showPicker, setShowPicker] = useState(false)
   const [showRoutinePicker, setShowRoutinePicker] = useState(false)
   const [routines, setRoutines] = useState([])
   const [startTime] = useState(() => {
-    if (location.state?.routineId) {
-      const t = Date.now()
-      sessionStorage.setItem('wk_start', String(t))
-      return t
-    }
-    const saved = sessionStorage.getItem('wk_start')
+    const saved = localStorage.getItem('wk_start')
     if (saved) return parseInt(saved, 10)
     const t = Date.now()
-    sessionStorage.setItem('wk_start', String(t))
+    localStorage.setItem('wk_start', String(t))
     return t
   })
   const [elapsed, setElapsed] = useState(0)
@@ -33,25 +27,25 @@ export default function Workout() {
 
   useEffect(() => {
     const routineId = location.state?.routineId
-    if (routineId) {
-      db.routines.get(routineId).then(r => {
-        if (!r) return
-        const loaded = (r.exercises || []).map(e => ({
-          exerciseId: e.exerciseId,
-          name: e.name,
-          type: e.type,
-          sets: e.type === 'cardio'
-            ? Array.from({ length: e.sets || 1 }, () => ({ duration: e.duration || 30, distance: e.distance || 0, done: false }))
-            : Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
-        }))
-        setExercises(loaded)
-        sessionStorage.setItem('wk_exercises', JSON.stringify(loaded))
-      })
-    }
+    // localStorage에 저장된 운동이 있으면 재로드 상황 → 덮어쓰지 않음
+    if (!routineId || localStorage.getItem('wk_exercises')) return
+    db.routines.get(routineId).then(r => {
+      if (!r) return
+      const loaded = (r.exercises || []).map(e => ({
+        exerciseId: e.exerciseId,
+        name: e.name,
+        type: e.type,
+        sets: e.type === 'cardio'
+          ? Array.from({ length: e.sets || 1 }, () => ({ duration: e.duration || 30, distance: e.distance || 0, done: false }))
+          : Array.from({ length: e.sets || 3 }, () => ({ reps: e.reps || 10, weight: e.weight || 0, done: false })),
+      }))
+      setExercises(loaded)
+      localStorage.setItem('wk_exercises', JSON.stringify(loaded))
+    })
   }, [location.state])
 
   useEffect(() => {
-    sessionStorage.setItem('wk_exercises', JSON.stringify(exercises))
+    localStorage.setItem('wk_exercises', JSON.stringify(exercises))
   }, [exercises])
 
   useEffect(() => {
@@ -121,8 +115,8 @@ export default function Workout() {
   }
 
   async function finish() {
-    sessionStorage.removeItem('wk_start')
-    sessionStorage.removeItem('wk_exercises')
+    localStorage.removeItem('wk_start')
+    localStorage.removeItem('wk_exercises')
     if (exercises.length === 0) { navigate('/'); return }
     setSaving(true)
     const now = new Date()

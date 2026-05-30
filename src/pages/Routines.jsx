@@ -65,7 +65,7 @@ export default function Routines() {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => navigate('/workout', { state: { routineId: r.id } })}
+                  onClick={() => { localStorage.removeItem('wk_start'); localStorage.removeItem('wk_exercises'); navigate('/workout', { state: { routineId: r.id } }) }}
                   className="text-xs btn-grad px-3 py-1.5 rounded-lg"
                 >
                   시작

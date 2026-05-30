@@ -344,7 +344,7 @@ export default function Home() {
                 ) : (
                   routines.map(r => (
                     <button key={r.id}
-                      onClick={() => { setShowPicker(false); navigate('/workout', { state: { routineId: r.id } }) }}
+                      onClick={() => { setShowPicker(false); localStorage.removeItem('wk_start'); localStorage.removeItem('wk_exercises'); navigate('/workout', { state: { routineId: r.id } }) }}
                       className="w-full glass rounded-2xl px-4 py-4 flex items-center justify-between text-left">
                       <div>
                         <p className="font-semibold text-sm">{r.name}</p>
