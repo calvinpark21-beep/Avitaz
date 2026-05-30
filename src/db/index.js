@@ -17,7 +17,7 @@ db.version(2).stores({
   inbodyLogs: '++id, date',
 })
 
-const SEED_VERSION = 'v13'
+const SEED_VERSION = 'v14'
 
 const EXERCISES = [
   // 가슴
@@ -50,6 +50,7 @@ const EXERCISES = [
   { name: '카프 레이즈', category: '하체' },
   { name: '워킹런지', category: '하체' },
   { name: '사이드런지', category: '하체' },
+  { name: '바벨스쿼트', category: '하체' },
   // 이두
   { name: '바벨 컬', category: '이두' },
   { name: '덤벨 컬', category: '이두' },
@@ -94,6 +95,8 @@ const EXERCISES = [
   { name: '걷기', category: '유산소', type: 'cardio' },
   { name: '슬로우러닝', category: '유산소', type: 'cardio' },
   // PT 운동 (등·요가)
+  { name: '업도그&다운도그', category: 'PT 운동', note: 'Up dog & Down dog' },
+  { name: '런지&하이니', category: 'PT 운동' },
   { name: '부장가아사나', category: 'PT 운동', note: '베이비코브라자세' },
   // PT 운동 (5/20 — 최신)
   { name: '옆구리 비틀기', category: 'PT 운동', note: '5/20 · 네발자세에서 비틀기' },
@@ -178,7 +181,22 @@ const EXERCISES = [
   { name: '하프스쿼트', category: 'PT 운동', note: '1일차' },
 ]
 
-const ROUTINE_SEED_VERSION = 'v4'
+const ROUTINE_SEED_VERSION = 'v5'
+
+const SEED_ROUTINES_V5 = [
+  {
+    name: '루틴10: 하체+요가',
+    exercises: [
+      { name: '바벨스쿼트', note: '20~40kg', sets: 3, reps: 10, weight: 30 },
+      { name: '딥스쿼트', note: 'w/8kg', sets: 3, reps: 10, weight: 8 },
+      { name: '점프 스쿼트', note: '가볍게', sets: 3, reps: 10, weight: 0 },
+      { name: '포워드 런지', note: 'w/덤벨', sets: 3, reps: 10, weight: 0 },
+      { name: '백워드 런지', note: 'w/덤벨', sets: 3, reps: 10, weight: 0 },
+      { name: '런지&하이니', sets: 3, reps: 10, weight: 0 },
+      { name: '업도그&다운도그', sets: 3, reps: 10, weight: 0 },
+    ],
+  },
+]
 
 const SEED_ROUTINES_V4 = [
   {
@@ -312,6 +330,13 @@ export async function seedRoutines() {
   // v4: 루틴8, 9
   if (!savedVersion || savedVersion < 'v4') {
     for (const r of SEED_ROUTINES_V4) {
+      await db.routines.add({ ...r, exercises: r.exercises.map(e => ({ ...e, exerciseId: 0 })) })
+    }
+  }
+
+  // v5: 루틴10
+  if (!savedVersion || savedVersion < 'v5') {
+    for (const r of SEED_ROUTINES_V5) {
       await db.routines.add({ ...r, exercises: r.exercises.map(e => ({ ...e, exerciseId: 0 })) })
     }
   }
